@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 
 // ── Supabase config ─────────────────────────────────────────
 const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL || "https://cktwtfavcpadtfupynmq.supabase.co";
-const SUPABASE_KEY = process.env.REACT_APP_SUPABASE_KEY || "sb_publishable_CVaR1scybSZRAGt-OtBzaw_Sx1uTAlZ";
+const SUPABASE_KEY = process.env.REACT_APP_SUPABASE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrdHd0ZmF2Y3BhZHRmdXB5bm1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMDU5NDcsImV4cCI6MjA5Njc4MTk0N30.NhruoRIl9fa0bqfnzLOu4tU6u2-4WLvhO_6-Zr_x-Vs";
 
 async function sbFetch(path, method = "GET", body = null) {
   const headers = {
