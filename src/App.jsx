@@ -182,16 +182,29 @@ function ConnectScreen({ name, onConnect, onSkip, onBack }) {
   const [error, setError] = useState(null);
   const myCode = useRef(name.toUpperCase().slice(0, 3) + Math.floor(1000 + Math.random() * 9000));
 
-  async function handleInvite() {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await db.from("users").insert({ name, couple_code: myCode.current }).select();
-      onConnect({ name, coupleCode: myCode.current, userId: data[0].id, isNew: true });
-    } catch (e) {
-      setError(`Error: ${e.message.slice(0, 100)}`);
+  const [registeredId, setRegisteredId] = useState(null);
+  const [registering, setRegistering] = useState(false);
+
+  // Register the code the moment the invite screen is shown
+  useEffect(() => {
+    if (mode === "invite" && !registeredId && !registering) {
+      (async () => {
+        setRegistering(true);
+        setError(null);
+        try {
+          const data = await db.from("users").insert({ name, couple_code: myCode.current }).select();
+          setRegisteredId(data[0].id);
+        } catch (e) {
+          setError(`Couldn't create your code: ${e.message.slice(0, 120)}`);
+        }
+        setRegistering(false);
+      })();
     }
-    setLoading(false);
+  }, [mode]);
+
+  function handleInvite() {
+    if (!registeredId) return;
+    onConnect({ name, coupleCode: myCode.current, userId: registeredId, isNew: true });
   }
 
   async function handleJoin() {
@@ -251,10 +264,12 @@ function ConnectScreen({ name, onConnect, onSkip, onBack }) {
             <div style={{ background: COLORS.white, border: `1.5px solid ${COLORS.creamDark}`, borderRadius: 16, padding: "28px", textAlign: "center", marginBottom: 20 }}>
               <p style={{ fontFamily: "Lora, serif", fontSize: 32, fontWeight: 500, color: COLORS.ink, letterSpacing: 4 }}>{myCode.current}</p>
             </div>
-            <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, fontWeight: 300, color: COLORS.inkMute, lineHeight: 1.6, textAlign: "center", marginBottom: 24 }}>Share this with your person. Once they enter it, you'll be connected.</p>
+            <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, fontWeight: 300, color: registering ? COLORS.inkMute : COLORS.green, lineHeight: 1.6, textAlign: "center", marginBottom: 24 }}>
+              {registering ? "Setting up your code…" : registeredId ? "✓ Your code is live. Share it with your person — once they enter it, you'll be connected." : ""}
+            </p>
             {error && <p style={{ color: COLORS.red, fontSize: 12, marginBottom: 16, textAlign: "center" }}>{error}</p>}
-            <button onClick={handleInvite} disabled={loading} style={{ width: "100%", padding: "18px", background: COLORS.ink, color: COLORS.cream, border: "none", borderRadius: 16, fontFamily: "Lora, serif", fontSize: 17, cursor: "pointer", boxShadow: "0 4px 20px rgba(28,25,23,0.18)" }}>
-              {loading ? "Setting up…" : "I've shared my code"}
+            <button onClick={handleInvite} disabled={!registeredId} style={{ width: "100%", padding: "18px", background: registeredId ? COLORS.ink : COLORS.creamDark, color: registeredId ? COLORS.cream : COLORS.inkMute, border: "none", borderRadius: 16, fontFamily: "Lora, serif", fontSize: 17, cursor: registeredId ? "pointer" : "default", boxShadow: registeredId ? "0 4px 20px rgba(28,25,23,0.18)" : "none" }}>
+              Continue
             </button>
           </div>
         )}
