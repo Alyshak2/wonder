@@ -26,9 +26,13 @@ const db = {
       order: (col, { ascending } = {}) => sbFetch(`${table}?order=${col}.${ascending ? "asc" : "desc"}&select=${cols}`),
       then: (resolve, reject) => sbFetch(`${table}?select=${cols}`).then(resolve).catch(reject),
     }),
-    insert: (data) => ({
-      select: () => sbFetch(`${table}`, "POST", data),
-    }),
+    insert: (data) => {
+      const run = () => sbFetch(`${table}`, "POST", data);
+      return {
+        select: run,
+        then: (resolve, reject) => run().then(resolve).catch(reject),
+      };
+    },
     update: (data) => ({
       eq: (col, val) => sbFetch(`${table}?${col}=eq.${encodeURIComponent(val)}`, "PATCH", data),
     }),
@@ -94,9 +98,9 @@ function WelcomeScreen({ onNext }) {
         <path d="M0 140 Q100 100 200 120 Q300 140 390 110 L390 200 L0 200 Z" fill="#E8E2D9" opacity="0.7"/>
         <path d="M0 155 Q70 135 150 148 Q230 161 310 142 Q350 133 390 140 L390 200 L0 200 Z" fill="#DDD6CB" opacity="0.5"/>
         <path d="M0 170 Q50 160 120 168 Q200 176 280 162 Q335 152 390 158 L390 200 L0 200 Z" fill="#C8BFB0" opacity="0.3"/>
-        <path d="M 80 200 C 100 185 125 175 140 160 C 158 143 148 130 165 118 C 182 106 205 108 218 96 C 232 83 228 68 245 58" stroke="#C8BFB0" strokeWidth="22" strokeLinecap="round" fill="none"/>
-        <path d="M 80 200 C 100 185 125 175 140 160 C 158 143 148 130 165 118 C 182 106 205 108 218 96 C 232 83 228 68 245 58" stroke="#B8B0A4" strokeWidth="22" strokeLinecap="round" fill="none" opacity="0.3"/>
-        <path d="M 80 200 C 100 185 125 175 140 160 C 158 143 148 130 165 118 C 182 106 205 108 218 96 C 232 83 228 68 245 58" stroke="#FAF7F2" strokeWidth="3" strokeLinecap="round" strokeDasharray="10 16" fill="none" opacity="0.7"/>
+        <path d="M 80 200 C 100 185 125 175 140 160 C 158 143 148 130 165 118 C 182 106 205 108 218 96 " stroke="#C8BFB0" strokeWidth="22" strokeLinecap="round" fill="none"/>
+        <path d="M 80 200 C 100 185 125 175 140 160 C 158 143 148 130 165 118 C 182 106 205 108 218 96 " stroke="#B8B0A4" strokeWidth="22" strokeLinecap="round" fill="none" opacity="0.3"/>
+        <path d="M 80 200 C 100 185 125 175 140 160 C 158 143 148 130 165 118 C 182 106 205 108 218 96 " stroke="#FAF7F2" strokeWidth="3" strokeLinecap="round" strokeDasharray="10 16" fill="none" opacity="0.7"/>
         <circle cx="50" cy="148" r="22" fill="#3D6B4F" opacity="0.15"/>
         <circle cx="36" cy="155" r="16" fill="#3D6B4F" opacity="0.12"/>
         <circle cx="62" cy="142" r="18" fill="#3D6B4F" opacity="0.13"/>
@@ -399,6 +403,7 @@ export default function WonderApp() {
   const [revealed, setRevealed] = useState(false);
   const [showVulnerablePause, setShowVulnerablePause] = useState(false);
   const [saveError, setSaveError] = useState(null);
+  const [partnerName, setPartnerName] = useState(null);
   const pollTimer = useRef(null);
 
   const pool = questions.filter(q => !q.discussed && !q.skipped);
@@ -433,11 +438,21 @@ export default function WonderApp() {
     }
   }
 
+  // Find your person's name (their record points back at you)
+  async function checkPartner() {
+    if (!userSession?.userId || partnerName) return;
+    try {
+      const rows = await db.from("users").select().eq("partner_id", userSession.userId);
+      if (rows && rows.length > 0) setPartnerName(rows[0].name);
+    } catch (e) {}
+  }
+
   // Poll for new questions every 10 seconds
   useEffect(() => {
     if (userSession?.coupleCode) {
       loadQuestions(userSession.coupleCode);
-      pollTimer.current = setInterval(() => loadQuestions(userSession.coupleCode), 10000);
+      checkPartner();
+      pollTimer.current = setInterval(() => { loadQuestions(userSession.coupleCode); checkPartner(); }, 10000);
     }
     return () => clearInterval(pollTimer.current);
   }, [userSession]);
@@ -653,7 +668,12 @@ export default function WonderApp() {
                   <div>
                     <div className="logo">Wonder</div>
                     <div className="tagline">For the things you've been meaning to ask</div>
-                    <button onClick={() => { clearSession(); window.location.reload(); }} style={{ background: "none", border: "none", padding: 0, marginTop: 4, fontSize: 10, color: COLORS.inkMute, fontFamily: "Inter, sans-serif", fontWeight: 300, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 2 }}>sign out</button>
+                    <p style={{ marginTop: 5, fontSize: 10, color: COLORS.inkMute, fontFamily: "Inter, sans-serif", fontWeight: 300 }}>
+                      {userSession?.name}
+                      {partnerName ? <span style={{ color: COLORS.green }}> · connected with {partnerName}</span> : userSession?.coupleCode ? " · waiting for your person" : " · not connected"}
+                      {" · "}
+                      <button onClick={() => { clearSession(); window.location.reload(); }} style={{ background: "none", border: "none", padding: 0, fontSize: 10, color: COLORS.inkMute, fontFamily: "Inter, sans-serif", fontWeight: 300, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 2 }}>sign out</button>
+                    </p>
                   </div>
                 </div>
                 <button onClick={() => { resetSheet(); setShowAddSheet(true); }} style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 16px", borderRadius: 24, background: COLORS.ink, border: "none", color: COLORS.cream, fontSize: 13, fontWeight: 500, fontFamily: "Inter, sans-serif", cursor: "pointer", flexShrink: 0 }}>
