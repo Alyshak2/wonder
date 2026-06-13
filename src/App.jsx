@@ -565,6 +565,7 @@ export default function WonderApp() {
   const [showVulnerablePause, setShowVulnerablePause] = useState(false);
   const [vulnerableConsented, setVulnerableConsented] = useState(false);
   const [showSignOut, setShowSignOut] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   const [saveError, setSaveError] = useState(null);
   const [partnerName, setPartnerName] = useState(null);
   const [ownedPacks, setOwnedPacks] = useState([]);
@@ -837,6 +838,40 @@ export default function WonderApp() {
 
       {onboarding === "done" && (<>
 
+        {/* PROFILE SHEET */}
+        {showProfile && (
+          <div className="sheet-overlay" onClick={(e) => e.target === e.currentTarget && setShowProfile(false)}>
+            <div className="sheet">
+              <div className="sheet-handle" />
+              <h2 className="sheet-title">{partnerName ? `You & ${partnerName}` : "Your profile"}</h2>
+              <div style={{ marginTop: 8, marginBottom: 24 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", padding: "13px 0", borderBottom: `1px solid ${COLORS.creamDark}` }}>
+                  <span style={{ fontSize: 13, color: COLORS.inkMute, fontWeight: 300 }}>You</span>
+                  <span style={{ fontSize: 13, color: COLORS.ink }}>{userSession?.name}</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", padding: "13px 0", borderBottom: `1px solid ${COLORS.creamDark}` }}>
+                  <span style={{ fontSize: 13, color: COLORS.inkMute, fontWeight: 300 }}>Connected with</span>
+                  <span style={{ fontSize: 13, color: partnerName ? COLORS.green : COLORS.inkMute }}>{partnerName || (userSession?.coupleCode ? "Waiting for your person" : "Not connected")}</span>
+                </div>
+                {userSession?.coupleCode && (
+                  <div style={{ display: "flex", justifyContent: "space-between", padding: "13px 0", borderBottom: `1px solid ${COLORS.creamDark}` }}>
+                    <span style={{ fontSize: 13, color: COLORS.inkMute, fontWeight: 300 }}>Your couple code</span>
+                    <span style={{ fontSize: 13, color: COLORS.ink, fontFamily: "Lora, serif", letterSpacing: 2 }}>{userSession.coupleCode}</span>
+                  </div>
+                )}
+              </div>
+              {userSession?.coupleCode && (
+                <p style={{ fontSize: 11, color: COLORS.inkMute, fontWeight: 300, lineHeight: 1.6, marginBottom: 20, textAlign: "center" }}>
+                  Keep your couple code somewhere safe - you'll both need it to sign back in if you ever log out.
+                </p>
+              )}
+              <button onClick={() => { setShowProfile(false); setShowSignOut(true); }} style={{ width: "100%", padding: "14px", background: "none", border: `1.5px solid ${COLORS.creamDark}`, borderRadius: 14, fontFamily: "Inter, sans-serif", fontSize: 13, color: COLORS.red, cursor: "pointer" }}>
+                Sign out
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* SIGN OUT CONFIRM */}
         {showSignOut && (
           <div className="sheet-overlay" onClick={(e) => e.target === e.currentTarget && setShowSignOut(false)}>
@@ -943,7 +978,7 @@ export default function WonderApp() {
         {!showDraw && !showVulnerablePause && (
           <div className="screen">
             <div className="header">
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                   <div style={{ width: 44, height: 44, borderRadius: "22.4%", background: COLORS.white, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, border: `1.5px solid ${COLORS.creamDark}` }}>
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
@@ -957,17 +992,13 @@ export default function WonderApp() {
                   <div>
                     <div className="logo">Wonder</div>
                     <div className="tagline">For the things you've been meaning to ask</div>
-                    <p style={{ marginTop: 5, fontSize: 10, color: COLORS.inkMute, fontFamily: "Inter, sans-serif", fontWeight: 300 }}>
-                      {userSession?.name}
-                      {partnerName ? <span style={{ color: COLORS.green }}> · connected with {partnerName}</span> : userSession?.coupleCode ? " · waiting for your person" : " · not connected"}
-                      {userSession?.coupleCode && <span> · code <span style={{ fontFamily: "Lora, serif", color: COLORS.inkSoft, letterSpacing: 1 }}>{userSession.coupleCode}</span></span>}
-                      {" · "}
-                      <button onClick={() => setShowSignOut(true)} style={{ background: "none", border: "none", padding: 0, fontSize: 10, color: COLORS.inkMute, fontFamily: "Inter, sans-serif", fontWeight: 300, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 2 }}>sign out</button>
-                    </p>
                   </div>
                 </div>
-                <button onClick={() => { resetSheet(); setShowAddSheet(true); }} style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 16px", borderRadius: 24, background: COLORS.ink, border: "none", color: COLORS.cream, fontSize: 13, fontWeight: 500, fontFamily: "Inter, sans-serif", cursor: "pointer", flexShrink: 0 }}>
-                  <span style={{ fontSize: 16, lineHeight: 1 }}>+</span> Add
+                <button onClick={() => setShowProfile(true)} style={{ display: "flex", alignItems: "center", gap: 8, background: COLORS.white, border: `1.5px solid ${COLORS.creamDark}`, borderRadius: 24, padding: "5px 5px 5px 12px", cursor: "pointer", flexShrink: 0 }}>
+                  <span style={{ fontSize: 12, color: COLORS.inkSoft, fontWeight: 500, fontFamily: "Inter, sans-serif" }}>{userSession?.name}</span>
+                  <span style={{ width: 26, height: 26, borderRadius: "50%", background: COLORS.green, color: COLORS.white, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontFamily: "Lora, serif" }}>
+                    {(userSession?.name || "?").charAt(0).toUpperCase()}
+                  </span>
                 </button>
               </div>
             </div>
@@ -983,6 +1014,9 @@ export default function WonderApp() {
               </div>
               <button className="draw-btn" onClick={drawQuestion} disabled={pool.length === 0 && ownedPacks.length === 0}>
                 {pool.length === 0 && ownedPacks.length === 0 ? "No questions yet" : "Draw a question"}
+              </button>
+              <button onClick={() => { resetSheet(); setShowAddSheet(true); }} style={{ width: "100%", padding: "16px", background: "transparent", color: COLORS.inkSoft, border: `1.5px solid ${COLORS.creamDark}`, borderRadius: 20, fontFamily: "Lora, serif", fontSize: 16, cursor: "pointer", marginBottom: 4 }}>
+                + Add a question
               </button>
             </div>
 
