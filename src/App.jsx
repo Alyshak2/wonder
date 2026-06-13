@@ -62,14 +62,14 @@ const INTENSITY = {
   green: { label: "Gentle", color: COLORS.green, bg: COLORS.greenLight, dot: "#3D6B4F" },
   amber: { label: "Deeper", color: COLORS.amber, bg: COLORS.amberLight, dot: "#B45309" },
   red: { label: "Vulnerable", color: COLORS.red, bg: COLORS.redLight, dot: "#9B2335" },
-  spicy: { label: "🌶️", color: "#C2410C", bg: "#FFF0E6", dot: "#C2410C", emojiOnly: true },
+  spicy: { label: "Playful", color: "#C2410C", bg: "#FFF0E6", dot: "#C2410C" },
 };
 
 
 // ── Question packs ───────────────────────────────────────────
 const PACKS = {
   light: {
-    name: "Light", intensity: "green", price: "£0.99",
+    name: "Light", intensity: "green", price: "Free",
     desc: "For any moment together. Easy to answer, always interesting.",
     questions: [
       "What's a small thing that happened this week that stayed with you?",
@@ -141,7 +141,7 @@ const PACKS = {
     ],
   },
   vulnerable: {
-    name: "Vulnerable", intensity: "red", price: "£1.99",
+    name: "Vulnerable", intensity: "red", price: "£2.99",
     desc: "For when you're ready to really open up. Take your time with these.",
     questions: [
       "What's something about yourself you're still learning to accept?",
@@ -239,7 +239,7 @@ function WelcomeScreen({ onNext }) {
         <path d="M0 140 Q100 100 200 120 Q300 140 390 110 L390 200 L0 200 Z" fill="#E8E2D9" opacity="0.7"/>
         <path d="M0 155 Q70 135 150 148 Q230 161 310 142 Q350 133 390 140 L390 200 L0 200 Z" fill="#DDD6CB" opacity="0.5"/>
         <path d="M0 170 Q50 160 120 168 Q200 176 280 162 Q335 152 390 158 L390 200 L0 200 Z" fill="#C8BFB0" opacity="0.3"/>
-        <path d="M 80 200 C 100 186 122 178 138 166 C 156 152 150 142 168 132" stroke="#B8B0A4" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.8"/>
+        <path d="M 96 200 C 128 188 96 172 132 160 C 170 148 200 150 188 130 C 180 116 232 116 245 106" stroke="#B8B0A4" strokeWidth="2.4" strokeLinecap="round" fill="none" opacity="0.85"/>
         <circle cx="50" cy="148" r="22" fill="#3D6B4F" opacity="0.15"/>
         <circle cx="36" cy="155" r="16" fill="#3D6B4F" opacity="0.12"/>
         <circle cx="62" cy="142" r="18" fill="#3D6B4F" opacity="0.13"/>
@@ -247,7 +247,7 @@ function WelcomeScreen({ onNext }) {
         <circle cx="310" cy="138" r="20" fill="#3D6B4F" opacity="0.13"/>
         <circle cx="328" cy="144" r="15" fill="#3D6B4F" opacity="0.11"/>
         <circle cx="295" cy="145" r="16" fill="#3D6B4F" opacity="0.12"/>
-        <path d="M 0 118 Q 40 108 80 112 Q 120 116 160 108 Q 200 100 240 105 Q 280 110 320 102 Q 355 95 390 98 L390 118 L0 118 Z" fill="#3D6B4F" opacity="0.08"/>
+        <path d="M 0 118 Q 40 108 80 112 Q 120 116 160 108 Q 200 100 245 104 Q 290 108 320 102 Q 355 95 390 98 L390 118 L0 118 Z" fill="#3D6B4F" opacity="0.18"/>
         <ellipse cx="245" cy="58" rx="60" ry="30" fill="#FEF3C7" opacity="0.35"/>
         <ellipse cx="245" cy="58" rx="30" ry="16" fill="#FDE68A" opacity="0.2"/>
       </svg>
@@ -824,7 +824,6 @@ export default function WonderApp() {
   const IntensityIndicator = ({ intensityKey, size = 10 }) => {
     const i = INTENSITY[intensityKey];
     if (!i) return null;
-    if (i.emojiOnly) return <span style={{ fontSize: size + 4 }}>🌶️</span>;
     return <span className="intensity-dot" style={{ backgroundColor: i.dot, width: size, height: size, borderRadius: "50%", display: "inline-block", flexShrink: 0 }} />;
   };
 
@@ -921,9 +920,7 @@ export default function WonderApp() {
                   <div className="draw-card" style={{ animation: "revealCard 1s cubic-bezier(0.16,1,0.3,1) forwards", background: INTENSITY[drawnQuestion.intensity]?.bg || COLORS.white, borderLeft: `4px solid ${INTENSITY[drawnQuestion.intensity]?.dot || COLORS.ink}` }}>
                     <div className="draw-card-intensity">
                       <IntensityIndicator intensityKey={drawnQuestion.intensity} />
-                      {!INTENSITY[drawnQuestion.intensity]?.emojiOnly && (
-                        <span style={{ fontSize: 11, fontWeight: 500, color: INTENSITY[drawnQuestion.intensity]?.color, letterSpacing: "0.5px", textTransform: "uppercase" }}>{INTENSITY[drawnQuestion.intensity]?.label}</span>
-                      )}
+                      <span style={{ fontSize: 11, fontWeight: 500, color: INTENSITY[drawnQuestion.intensity]?.color, letterSpacing: "0.5px", textTransform: "uppercase" }}>{INTENSITY[drawnQuestion.intensity]?.label}</span>
                     </div>
                     <p className="draw-question" style={{ animation: "revealQuestion 1.2s 0.3s ease both" }}>"{drawnQuestion.text}"</p>
                   </div>
@@ -1029,10 +1026,7 @@ export default function WonderApp() {
                                 <span style={{ fontSize: 13, color: COLORS.inkMute, flexShrink: 0, marginTop: 2 }}>✎</span>
                               </div>
                               <div className="question-meta">
-                                {INTENSITY[q.intensity]?.emojiOnly
-                                  ? <span className="intensity-badge" style={{ backgroundColor: "#FFF0E6", color: "#C2410C" }}>🌶️</span>
-                                  : <span className="intensity-badge" style={intensityStyle(q.intensity)}>{INTENSITY[q.intensity]?.label}</span>
-                                }
+                                <span className="intensity-badge" style={intensityStyle(q.intensity)}>{INTENSITY[q.intensity]?.label}</span>
                                 <span className="author-tag">added by you</span>
                               </div>
                             </div>
@@ -1049,10 +1043,7 @@ export default function WonderApp() {
                                 <p className="question-text" style={{ color: COLORS.inkMute, fontStyle: "italic" }}>Question waiting to be drawn…</p>
                               </div>
                               <div className="question-meta">
-                                {INTENSITY[q.intensity]?.emojiOnly
-                                  ? <span className="intensity-badge" style={{ backgroundColor: "#FFF0E6", color: "#C2410C" }}>🌶️</span>
-                                  : <span className="intensity-badge" style={intensityStyle(q.intensity)}>{INTENSITY[q.intensity]?.label}</span>
-                                }
+                                <span className="intensity-badge" style={intensityStyle(q.intensity)}>{INTENSITY[q.intensity]?.label}</span>
                                 <span className="author-tag">added by {partnerName || "your person"}</span>
                               </div>
                             </div>
@@ -1071,10 +1062,7 @@ export default function WonderApp() {
                             <p className="question-text">{q.text}</p>
                           </div>
                           <div className="question-meta">
-                            {INTENSITY[q.intensity]?.emojiOnly
-                              ? <span className="intensity-badge" style={{ backgroundColor: "#FFF0E6", color: "#C2410C" }}>🌶️</span>
-                              : <span className="intensity-badge" style={intensityStyle(q.intensity)}>{INTENSITY[q.intensity]?.label}</span>
-                            }
+                            <span className="intensity-badge" style={intensityStyle(q.intensity)}>{INTENSITY[q.intensity]?.label}</span>
                             <button onClick={async () => {
                               
                               if (userSession?.coupleCode) {
@@ -1109,10 +1097,7 @@ export default function WonderApp() {
                         <div key={q.id} style={{ background: COLORS.white, borderRadius: 16, padding: "16px 18px", marginBottom: 10, borderLeft: `4px solid ${INTENSITY[q.intensity]?.dot}` }}>
                           <p style={{ fontFamily: "Lora, serif", fontSize: 14, color: COLORS.inkSoft, lineHeight: 1.55, marginBottom: 8, fontStyle: "italic" }}>"{q.text}"</p>
                           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                            {INTENSITY[q.intensity]?.emojiOnly
-                              ? <span style={{ fontSize: 11 }}>🌶️</span>
-                              : <span style={{ fontSize: 10, fontWeight: 500, color: INTENSITY[q.intensity]?.color, backgroundColor: INTENSITY[q.intensity]?.bg, padding: "2px 8px", borderRadius: 20 }}>{INTENSITY[q.intensity]?.label}</span>
-                            }
+                            <span style={{ fontSize: 10, fontWeight: 500, color: INTENSITY[q.intensity]?.color, backgroundColor: INTENSITY[q.intensity]?.bg, padding: "2px 8px", borderRadius: 20 }}>{INTENSITY[q.intensity]?.label}</span>
                             <span style={{ fontSize: 10, color: COLORS.inkMute, fontWeight: 300 }}>{PACK_TEXT_TO_NAME[q.text] ? `from the ${PACK_TEXT_TO_NAME[q.text]} pack` : (q.author === "you" ? "added by you" : `added by ${partnerName || "your person"}`)}</span>
                           </div>
                         </div>
@@ -1145,7 +1130,7 @@ export default function WonderApp() {
                           )}
                         </div>
                         <p style={{ fontSize: 12, color: COLORS.inkSoft, fontWeight: 300, lineHeight: 1.55, fontStyle: "italic", fontFamily: "Lora, serif" }}>{pack.desc}</p>
-                        {!owned && <p style={{ fontSize: 10, color: COLORS.inkMute, fontWeight: 300, marginTop: 8 }}>Will be {pack.price} after beta</p>}
+                        {!owned && pack.price !== "Free" && <p style={{ fontSize: 10, color: COLORS.inkMute, fontWeight: 300, marginTop: 8 }}>Will be {pack.price} after beta</p>}
                         {owned && isOpen && (
                           <div style={{ marginTop: 14, borderTop: `1px solid ${COLORS.creamDark}`, paddingTop: 14 }}>
                             {pack.questions.map((q, qi) => (
@@ -1179,8 +1164,8 @@ export default function WonderApp() {
                   <div key={key} className={`intensity-option ${newIntensity === key ? "selected" : ""}`}
                     style={{ backgroundColor: newIntensity === key ? val.bg : COLORS.white, color: val.color, borderColor: newIntensity === key ? val.dot : "transparent" }}
                     onClick={() => setNewIntensity(key)}>
-                    {val.emojiOnly ? <div style={{ fontSize: 18, marginBottom: 6, lineHeight: 1 }}>🌶️</div> : <div className="intensity-option-dot" style={{ backgroundColor: val.dot }} />}
-                    {!val.emojiOnly && <span className="intensity-option-label">{val.label}</span>}
+                    <div className="intensity-option-dot" style={{ backgroundColor: val.dot }} />
+                    <span className="intensity-option-label">{val.label}</span>
                   </div>
                 ))}
               </div>
