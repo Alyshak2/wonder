@@ -98,9 +98,7 @@ function WelcomeScreen({ onNext }) {
         <path d="M0 140 Q100 100 200 120 Q300 140 390 110 L390 200 L0 200 Z" fill="#E8E2D9" opacity="0.7"/>
         <path d="M0 155 Q70 135 150 148 Q230 161 310 142 Q350 133 390 140 L390 200 L0 200 Z" fill="#DDD6CB" opacity="0.5"/>
         <path d="M0 170 Q50 160 120 168 Q200 176 280 162 Q335 152 390 158 L390 200 L0 200 Z" fill="#C8BFB0" opacity="0.3"/>
-        <path d="M 80 200 C 100 185 125 175 140 160 C 158 143 148 130 165 118 C 182 106 205 108 218 96 " stroke="#C8BFB0" strokeWidth="22" strokeLinecap="round" fill="none"/>
-        <path d="M 80 200 C 100 185 125 175 140 160 C 158 143 148 130 165 118 C 182 106 205 108 218 96 " stroke="#B8B0A4" strokeWidth="22" strokeLinecap="round" fill="none" opacity="0.3"/>
-        <path d="M 80 200 C 100 185 125 175 140 160 C 158 143 148 130 165 118 C 182 106 205 108 218 96 " stroke="#FAF7F2" strokeWidth="3" strokeLinecap="round" strokeDasharray="10 16" fill="none" opacity="0.7"/>
+        <path d="M 80 200 C 100 185 125 175 140 160 C 158 143 148 130 165 118 C 182 106 205 108 218 96 " stroke="#B8B0A4" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.8"/>
         <circle cx="50" cy="148" r="22" fill="#3D6B4F" opacity="0.15"/>
         <circle cx="36" cy="155" r="16" fill="#3D6B4F" opacity="0.12"/>
         <circle cx="62" cy="142" r="18" fill="#3D6B4F" opacity="0.13"/>
@@ -746,7 +744,7 @@ export default function WonderApp() {
                       )}
                       {pool.filter(q => q.author === "partner").length > 0 && (
                         <>
-                          <p className="section-label" style={{ marginTop: pool.filter(q => q.author === "you").length > 0 ? 24 : 0 }}>from your person</p>
+                          <p className="section-label" style={{ marginTop: pool.filter(q => q.author === "you").length > 0 ? 24 : 0 }}>{partnerName ? `from ${partnerName.toLowerCase()}` : "from your person"}</p>
                           {pool.filter(q => q.author === "partner").map(q => (
                             <div key={q.id} className="question-card" style={{ cursor: "default", borderLeft: `4px solid ${INTENSITY[q.intensity]?.dot}` }}>
                               <div className="question-card-top">
@@ -758,7 +756,7 @@ export default function WonderApp() {
                                   ? <span className="intensity-badge" style={{ backgroundColor: "#FFF0E6", color: "#C2410C" }}>🌶️</span>
                                   : <span className="intensity-badge" style={intensityStyle(q.intensity)}>{INTENSITY[q.intensity]?.label}</span>
                                 }
-                                <span className="author-tag">added by your person</span>
+                                <span className="author-tag">added by {partnerName || "your person"}</span>
                               </div>
                             </div>
                           ))}
@@ -818,7 +816,7 @@ export default function WonderApp() {
                               ? <span style={{ fontSize: 11 }}>🌶️</span>
                               : <span style={{ fontSize: 10, fontWeight: 500, color: INTENSITY[q.intensity]?.color, backgroundColor: INTENSITY[q.intensity]?.bg, padding: "2px 8px", borderRadius: 20 }}>{INTENSITY[q.intensity]?.label}</span>
                             }
-                            <span style={{ fontSize: 10, color: COLORS.inkMute, fontWeight: 300 }}>added by {q.author}</span>
+                            <span style={{ fontSize: 10, color: COLORS.inkMute, fontWeight: 300 }}>added by {q.author === "you" ? "you" : (partnerName || "your person")}</span>
                           </div>
                         </div>
                       ))}
@@ -836,7 +834,7 @@ export default function WonderApp() {
                     { name: "Light", desc: "For any moment together. Easy to answer, always interesting.", intensity: "green", price: "£0.99", count: 30 },
                     { name: "Deep", desc: "For when you want to go somewhere more personal.", intensity: "amber", price: "£1.99", count: 30 },
                     { name: "Vulnerable", desc: "For when you're ready to really open up. Take your time with these.", intensity: "red", price: "£1.99", count: 25 },
-                    { name: "Us", desc: "The private world of two people. Questions only you two can answer.", intensity: "green", price: "£0.99", count: 24 },
+                    { name: "Us", desc: "The private world of two people. Questions only you two can answer.", intensity: "green", price: "£0.99", count: 25 },
                   ].map((pack, i) => (
                     <div key={i} style={{ background: COLORS.white, borderRadius: 20, padding: "20px", marginBottom: 14, borderLeft: `4px solid ${INTENSITY[pack.intensity]?.dot}` }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
