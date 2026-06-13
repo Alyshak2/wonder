@@ -172,7 +172,7 @@ const PACKS = {
     ],
   },
   us: {
-    name: "Us", intensity: "green", price: "£0.99",
+    name: "Us", intensity: "green", price: "£1.99",
     desc: "The private world of two people. Questions only you two can answer.",
     questions: [
       "What's a word or phrase that only means something because of us?",
