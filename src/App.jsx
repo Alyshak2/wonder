@@ -112,11 +112,11 @@ const PACKS = {
       "What's something you were nervous to tell me early on?",
       "What's something about me that you didn't expect when we first got together?",
       "What's a memory of us that you find yourself thinking about often?",
-      "What's a moment early on with me where you thought — yes, this person?",
+      "What's a moment early on with me where you thought - yes, this person?",
       "What's something you believe that you'd find hard to defend out loud?",
       "What's a choice you made that you're still thinking about?",
       "What's something you've never told your family about yourself?",
-      "What does home mean to you — and does it feel like a place or something else?",
+      "What does home mean to you - and does it feel like a place or something else?",
       "What's something you compromised on that I might not have realised?",
       "What do you think your younger self would make of your life now?",
       "What's something I do that you find quietly endearing?",
@@ -225,7 +225,7 @@ function clearSession() {
 function WelcomeScreen({ onNext }) {
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between", background: COLORS.cream }}>
-      {/* Concept B — the path alone */}
+      {/* Concept B - the path alone */}
       <svg width="100%" viewBox="0 0 390 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: "block", flexShrink: 0 }}>
         <rect width="390" height="200" fill="#F0EBE3"/>
         <defs>
@@ -239,7 +239,7 @@ function WelcomeScreen({ onNext }) {
         <path d="M0 140 Q100 100 200 120 Q300 140 390 110 L390 200 L0 200 Z" fill="#E8E2D9" opacity="0.7"/>
         <path d="M0 155 Q70 135 150 148 Q230 161 310 142 Q350 133 390 140 L390 200 L0 200 Z" fill="#DDD6CB" opacity="0.5"/>
         <path d="M0 170 Q50 160 120 168 Q200 176 280 162 Q335 152 390 158 L390 200 L0 200 Z" fill="#C8BFB0" opacity="0.3"/>
-        <path d="M 80 200 C 100 185 125 175 140 160 C 158 143 148 130 165 118" stroke="#B8B0A4" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.8"/>
+        <path d="M 80 200 C 100 186 122 178 138 166 C 156 152 150 142 168 132" stroke="#B8B0A4" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.8"/>
         <circle cx="50" cy="148" r="22" fill="#3D6B4F" opacity="0.15"/>
         <circle cx="36" cy="155" r="16" fill="#3D6B4F" opacity="0.12"/>
         <circle cx="62" cy="142" r="18" fill="#3D6B4F" opacity="0.13"/>
@@ -368,7 +368,7 @@ function ConnectScreen({ name, onConnect, onSkip, onBack }) {
         return;
       }
 
-      // Code already has a partner — sign back in if the name matches, otherwise reject
+      // Code already has a partner - sign back in if the name matches, otherwise reject
       if (owner.partner_id) {
         const partnerRows = await db.from("users").select().eq("id", owner.partner_id);
         const existing = partnerRows && partnerRows[0];
@@ -416,7 +416,7 @@ function ConnectScreen({ name, onConnect, onSkip, onBack }) {
             </button>
             <button onClick={() => setMode("join")} style={{ width: "100%", padding: "20px", background: COLORS.white, border: `1.5px solid ${COLORS.creamDark}`, borderRadius: 16, textAlign: "left", cursor: "pointer" }}>
               <p style={{ fontFamily: "Lora, serif", fontSize: 16, color: COLORS.ink, marginBottom: 4 }}>I have a code</p>
-              <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, color: COLORS.inkMute, fontWeight: 300 }}>Enter the code your person shared — or your couple code to sign back in</p>
+              <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, color: COLORS.inkMute, fontWeight: 300 }}>Enter the code your person shared - or your couple code to sign back in</p>
             </button>
           </div>
         )}
@@ -429,7 +429,7 @@ function ConnectScreen({ name, onConnect, onSkip, onBack }) {
               <p style={{ fontFamily: "Lora, serif", fontSize: 32, fontWeight: 500, color: COLORS.ink, letterSpacing: 4 }}>{myCode.current}</p>
             </div>
             <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, fontWeight: 300, color: registering ? COLORS.inkMute : COLORS.green, lineHeight: 1.6, textAlign: "center", marginBottom: 24 }}>
-              {registering ? "Setting up your code…" : registeredId ? "✓ Your code is live. Share it with your person — once they enter it, you'll be connected." : ""}
+              {registering ? "Setting up your code…" : registeredId ? "✓ Your code is live. Share it with your person - once they enter it, you'll be connected. You can both use this code to sign back in anytime." : ""}
             </p>
             {error && <p style={{ color: COLORS.red, fontSize: 12, marginBottom: 16, textAlign: "center" }}>{error}</p>}
             <button onClick={handleInvite} disabled={!registeredId} style={{ width: "100%", padding: "18px", background: registeredId ? COLORS.ink : COLORS.creamDark, color: registeredId ? COLORS.cream : COLORS.inkMute, border: "none", borderRadius: 16, fontFamily: "Lora, serif", fontSize: 17, cursor: registeredId ? "pointer" : "default", boxShadow: registeredId ? "0 4px 20px rgba(28,25,23,0.18)" : "none" }}>
@@ -536,9 +536,9 @@ const styles = `
   .intensity-option-label { font-size: 11px; font-weight: 500; display: block; }
 
   .stats-strip { display: flex; background: #FFFFFF; border-radius: 16px; overflow: hidden; margin-bottom: 16px; }
-  .stat-item { flex: 1; padding: 16px 12px; text-align: center; border-right: 1px solid #F0EBE3; }
+  .stat-item { flex: 1; padding: 14px 6px; text-align: center; border-right: 1px solid #F0EBE3; }
   .stat-item:last-child { border-right: none; }
-  .stat-number { font-family: 'Lora', serif; font-size: 24px; font-weight: 400; display: block; }
+  .stat-number { font-family: 'Lora', serif; font-size: 22px; font-weight: 400; display: block; }
   .stat-label { font-size: 10px; color: #78716C; font-weight: 300; display: block; margin-top: 2px; letter-spacing: 0.3px; }
 
   .back-btn { display: flex; align-items: center; gap: 6px; background: none; border: none; font-family: 'Inter', sans-serif; font-size: 13px; color: #78716C; cursor: pointer; padding: 0; margin-bottom: 24px; }
@@ -563,6 +563,8 @@ export default function WonderApp() {
   const [showDraw, setShowDraw] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const [showVulnerablePause, setShowVulnerablePause] = useState(false);
+  const [vulnerableConsented, setVulnerableConsented] = useState(false);
+  const [showSignOut, setShowSignOut] = useState(false);
   const [saveError, setSaveError] = useState(null);
   const [partnerName, setPartnerName] = useState(null);
   const [ownedPacks, setOwnedPacks] = useState([]);
@@ -575,7 +577,7 @@ export default function WonderApp() {
   const archive = questions.filter(q => q.discussed);
   const skipped = questions.filter(q => q.skipped && !q.discussed);
 
-  // Restore session on load — keeps you signed in on this device
+  // Restore session on load - keeps you signed in on this device
   useEffect(() => {
     const saved = loadSession();
     if (saved && saved.name) {
@@ -696,7 +698,7 @@ export default function WonderApp() {
           await db.from("questions").insert({ text: newQ.trim(), intensity: newIntensity, author_id: userSession.userId, couple_code: userSession.coupleCode, discussed: false, skipped: false });
           await loadQuestions(userSession.coupleCode);
         } else if (userSession?.coupleCode && !userSession?.userId) {
-          setSaveError("Your session is out of date — please sign out and reconnect with your person.");
+          setSaveError("Your session is out of date - please sign out and reconnect with your person.");
           return;
         } else {
           setQuestions(prev => [{ id: Date.now(), text: newQ.trim(), intensity: newIntensity, author: "you", discussed: false, skipped: false }, ...prev]);
@@ -728,7 +730,7 @@ export default function WonderApp() {
     setDrawnQuestion(q);
     setRevealed(false);
     if (navigator.vibrate) navigator.vibrate([10, 50, 20]);
-    if (q.intensity === "red") {
+    if (q.intensity === "red" && !vulnerableConsented) {
       setShowVulnerablePause(true);
     } else {
       setShowDraw(true);
@@ -747,7 +749,7 @@ export default function WonderApp() {
 
   function drawFromPool() {
     setShowSourcePicker(false);
-    if (pool.length === 0) { setPickerNote("Your pool is empty — add a question first."); return; }
+    if (pool.length === 0) { setPickerNote("Your pool is empty - add a question first."); return; }
     const q = pool[Math.floor(Math.random() * pool.length)];
     beginReveal(q);
   }
@@ -759,13 +761,14 @@ export default function WonderApp() {
 
   function drawFromPack(key) {
     const remaining = packRemaining(key);
-    if (remaining.length === 0) { setPickerNote(`You've been through every ${PACKS[key].name} question — lovely work.`); return; }
+    if (remaining.length === 0) { setPickerNote(`You've been through every ${PACKS[key].name} question - lovely work.`); return; }
     setShowSourcePicker(false);
     const text = remaining[Math.floor(Math.random() * remaining.length)];
     beginReveal({ id: null, text, intensity: PACKS[key].intensity, author: "pack" });
   }
 
   function confirmVulnerable() {
+    setVulnerableConsented(true);
     setShowVulnerablePause(false);
     setShowDraw(true);
     setTimeout(() => setRevealed(true), 1200);
@@ -810,6 +813,12 @@ export default function WonderApp() {
     setDrawnQuestion(null);
   }
 
+  const PACK_TEXT_TO_NAME = (() => {
+    const map = {};
+    Object.values(PACKS).forEach(p => p.questions.forEach(q => { map[q] = p.name; }));
+    return map;
+  })();
+
   const intensityStyle = (key) => ({ backgroundColor: INTENSITY[key].bg, color: INTENSITY[key].color });
 
   const IntensityIndicator = ({ intensityKey, size = 10 }) => {
@@ -828,6 +837,30 @@ export default function WonderApp() {
       {onboarding === "connect" && <ConnectScreen name={userName} onBack={() => setOnboarding("name")} onConnect={handleConnect} onSkip={handleSkip} />}
 
       {onboarding === "done" && (<>
+
+        {/* SIGN OUT CONFIRM */}
+        {showSignOut && (
+          <div className="sheet-overlay" onClick={(e) => e.target === e.currentTarget && setShowSignOut(false)}>
+            <div className="sheet">
+              <div className="sheet-handle" />
+              <h2 className="sheet-title">Sign out?</h2>
+              <p className="sheet-subtitle">You'll need your couple code to sign back in and reconnect with {partnerName || "your person"}.</p>
+              {userSession?.coupleCode && (
+                <div style={{ background: COLORS.white, border: `1.5px solid ${COLORS.creamDark}`, borderRadius: 16, padding: "20px", textAlign: "center", marginBottom: 20 }}>
+                  <p style={{ fontSize: 10, fontWeight: 500, letterSpacing: 1, textTransform: "uppercase", color: COLORS.inkMute, marginBottom: 8 }}>Your couple code</p>
+                  <p style={{ fontFamily: "Lora, serif", fontSize: 28, fontWeight: 500, color: COLORS.ink, letterSpacing: 3 }}>{userSession.coupleCode}</p>
+                  <p style={{ fontSize: 11, color: COLORS.inkMute, fontWeight: 300, marginTop: 8 }}>Write this down before you sign out</p>
+                </div>
+              )}
+              <button onClick={() => { clearSession(); window.location.reload(); }} style={{ width: "100%", padding: "16px", background: COLORS.ink, color: COLORS.cream, border: "none", borderRadius: 14, fontFamily: "Lora, serif", fontSize: 15, cursor: "pointer", marginBottom: 10 }}>
+                Sign out
+              </button>
+              <button onClick={() => setShowSignOut(false)} style={{ width: "100%", padding: "14px", background: "none", border: "none", fontFamily: "Inter, sans-serif", fontSize: 13, color: COLORS.inkMute, cursor: "pointer", fontWeight: 300 }}>
+                Stay signed in
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* DRAW SOURCE PICKER */}
         {showSourcePicker && (
@@ -930,8 +963,9 @@ export default function WonderApp() {
                     <p style={{ marginTop: 5, fontSize: 10, color: COLORS.inkMute, fontFamily: "Inter, sans-serif", fontWeight: 300 }}>
                       {userSession?.name}
                       {partnerName ? <span style={{ color: COLORS.green }}> · connected with {partnerName}</span> : userSession?.coupleCode ? " · waiting for your person" : " · not connected"}
+                      {userSession?.coupleCode && <span> · code <span style={{ fontFamily: "Lora, serif", color: COLORS.inkSoft, letterSpacing: 1 }}>{userSession.coupleCode}</span></span>}
                       {" · "}
-                      <button onClick={() => { clearSession(); window.location.reload(); }} style={{ background: "none", border: "none", padding: 0, fontSize: 10, color: COLORS.inkMute, fontFamily: "Inter, sans-serif", fontWeight: 300, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 2 }}>sign out</button>
+                      <button onClick={() => setShowSignOut(true)} style={{ background: "none", border: "none", padding: 0, fontSize: 10, color: COLORS.inkMute, fontFamily: "Inter, sans-serif", fontWeight: 300, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 2 }}>sign out</button>
                     </p>
                   </div>
                 </div>
@@ -948,6 +982,7 @@ export default function WonderApp() {
                 <div className="stat-item"><span className="stat-number" style={{ color: COLORS.green }}>{pool.length}</span><span className="stat-label">waiting</span></div>
                 <div className="stat-item"><span className="stat-number" style={{ color: COLORS.inkMute }}>{archive.length}</span><span className="stat-label">discussed</span></div>
                 <div className="stat-item"><span className="stat-number" style={{ color: COLORS.amber }}>{skipped.length}</span><span className="stat-label">saved</span></div>
+                <div className="stat-item"><span className="stat-number" style={{ color: COLORS.red }}>{ownedPacks.length}</span><span className="stat-label">packs</span></div>
               </div>
               <button className="draw-btn" onClick={drawQuestion} disabled={pool.length === 0 && ownedPacks.length === 0}>
                 {pool.length === 0 && ownedPacks.length === 0 ? "No questions yet" : "Draw a question"}
@@ -976,7 +1011,7 @@ export default function WonderApp() {
                         </svg>
                       </div>
                       <p className="empty-title">Your pool is empty</p>
-                      <p className="empty-body" style={{ marginBottom: 28 }}>Whenever a question comes to mind — on a commute, in the shower, at 2am — add it here. It'll be waiting when you're ready.</p>
+                      <p className="empty-body" style={{ marginBottom: 28 }}>Whenever a question comes to mind - on a commute, in the shower, at 2am - add it here. It'll be waiting when you're ready.</p>
                       <button onClick={() => { resetSheet(); setShowAddSheet(true); }} style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", borderRadius: 24, background: COLORS.ink, border: "none", color: COLORS.cream, fontSize: 15, fontFamily: "Lora, serif", cursor: "pointer", boxShadow: "0 4px 20px rgba(28,25,23,0.15)" }}>
                         + Add your first question
                       </button>
@@ -1065,7 +1100,7 @@ export default function WonderApp() {
                   {archive.length === 0 ? (
                     <div className="empty-state">
                       <p className="empty-title">Nothing here yet</p>
-                      <p className="empty-body">Questions you've talked about together will live here — a quiet record of your conversations.</p>
+                      <p className="empty-body">Questions you've talked about together will live here - a quiet record of your conversations.</p>
                     </div>
                   ) : (
                     <>
@@ -1078,7 +1113,7 @@ export default function WonderApp() {
                               ? <span style={{ fontSize: 11 }}>🌶️</span>
                               : <span style={{ fontSize: 10, fontWeight: 500, color: INTENSITY[q.intensity]?.color, backgroundColor: INTENSITY[q.intensity]?.bg, padding: "2px 8px", borderRadius: 20 }}>{INTENSITY[q.intensity]?.label}</span>
                             }
-                            <span style={{ fontSize: 10, color: COLORS.inkMute, fontWeight: 300 }}>added by {q.author === "you" ? "you" : (partnerName || "your person")}</span>
+                            <span style={{ fontSize: 10, color: COLORS.inkMute, fontWeight: 300 }}>{PACK_TEXT_TO_NAME[q.text] ? `from the ${PACK_TEXT_TO_NAME[q.text]} pack` : (q.author === "you" ? "added by you" : `added by ${partnerName || "your person"}`)}</span>
                           </div>
                         </div>
                       ))}
@@ -1091,7 +1126,7 @@ export default function WonderApp() {
               {tab === "packs" && (
                 <>
                   <p className="section-label">question packs</p>
-                  <p style={{ fontSize: 13, color: COLORS.inkMute, fontWeight: 300, lineHeight: 1.6, marginBottom: 24 }}>Curated questions for when you want a starting point. Free to unlock while Wonder is in beta — yours to keep.</p>
+                  <p style={{ fontSize: 13, color: COLORS.inkMute, fontWeight: 300, lineHeight: 1.6, marginBottom: 24 }}>Curated questions for when you want a starting point. Free to unlock while Wonder is in beta - yours to keep.</p>
                   {Object.entries(PACKS).map(([key, pack]) => {
                     const owned = ownedPacks.includes(key);
                     const isOpen = expandedPack === key;
@@ -1133,7 +1168,7 @@ export default function WonderApp() {
             <div className="sheet">
               <div className="sheet-handle" />
               <h2 className="sheet-title">{editingId ? "Edit question" : "Add a question"}</h2>
-              <p className="sheet-subtitle">{editingId ? "Change the wording or how it feels — your call." : "Something you've been meaning to ask."}</p>
+              <p className="sheet-subtitle">{editingId ? "Change the wording or how it feels - your call." : "Something you've been meaning to ask."}</p>
 
               <p className="field-label">Your question</p>
               <textarea rows={3} placeholder="What have you always wanted to know?" value={newQ} onChange={e => setNewQ(e.target.value)} />
