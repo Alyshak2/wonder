@@ -65,6 +65,147 @@ const INTENSITY = {
   spicy: { label: "🌶️", color: "#C2410C", bg: "#FFF0E6", dot: "#C2410C", emojiOnly: true },
 };
 
+
+// ── Question packs ───────────────────────────────────────────
+const PACKS = {
+  light: {
+    name: "Light", intensity: "green", price: "£0.99",
+    desc: "For any moment together. Easy to answer, always interesting.",
+    questions: [
+      "What's a small thing that happened this week that stayed with you?",
+      "What did you love doing when you were younger that you don't do anymore?",
+      "What's a place you've visited that you find yourself thinking about more than you'd expect?",
+      "What do you remember most vividly from when we first met?",
+      "What's something you're better at than most people think?",
+      "What's a film or show you could watch over and over and never get tired of?",
+      "What does your perfect Sunday morning look like?",
+      "What's a gift someone gave you that showed they really knew you?",
+      "What was it like telling people about us?",
+      "What song takes you straight back to a specific memory?",
+      "What's something you've changed your mind about recently?",
+      "What's your favourite time of day and why?",
+      "What's something I do that always makes you smile?",
+      "What's something you own that you'd be sad to lose?",
+      "What's a compliment you've received that you still think about?",
+      "What's something you've recommended to almost everyone you know?",
+      "What's something small that instantly improves your mood?",
+      "What's the best piece of advice you've ever been given?",
+      "What's something about your daily life right now that you genuinely enjoy?",
+      "What's a tradition from your childhood you'd want to carry forward?",
+      "What's something we do together that you always look forward to?",
+      "What's something you've always wanted to get better at?",
+      "What's something I've introduced you to that you're glad about?",
+      "What's something you do alone that you find genuinely restorative?",
+      "What's a smell that takes you straight back somewhere?",
+      "What's the nicest thing a stranger has ever done for you?",
+      "What's something you splurge on that you'd never apologise for?",
+      "What's something you find genuinely exciting that most people wouldn't understand?",
+      "What's a small pleasure you'd be embarrassed to admit how much you enjoy?",
+      "When you have a completely free afternoon with no plans, what does your ideal version of it look like?",
+    ],
+  },
+  deep: {
+    name: "Deep", intensity: "amber", price: "£1.99",
+    desc: "For when you want to go somewhere more personal.",
+    questions: [
+      "What's a period of your life that made you who you are more than any other?",
+      "What's something you were nervous to tell me early on?",
+      "What's something about me that you didn't expect when we first got together?",
+      "What's a memory of us that you find yourself thinking about often?",
+      "What's a moment early on with me where you thought — yes, this person?",
+      "What's something you believe that you'd find hard to defend out loud?",
+      "What's a choice you made that you're still thinking about?",
+      "What's something you've never told your family about yourself?",
+      "What does home mean to you — and does it feel like a place or something else?",
+      "What's something you compromised on that I might not have realised?",
+      "What do you think your younger self would make of your life now?",
+      "What's something I do that you find quietly endearing?",
+      "What's something you'd rather work through together than on your own?",
+      "What's something you did for the first time with me that you'd never done with anyone else?",
+      "What's a moment with me that you didn't realise was significant until later?",
+      "What's something you'd want us to do or experience before we're old?",
+      "What's a risk you took that you're glad you did?",
+      "What's something about me that makes you feel safe?",
+      "What's something you've never quite put into words about how you feel about us?",
+      "What's a quality in me that you see in yourself too?",
+      "What would you want to tell your teenage self about relationships?",
+      "What's something you thought you knew about yourself that turned out not to be true?",
+      "What do you want to be known for?",
+      "What does it mean to you to truly take care of someone?",
+      "What's something you've outgrown that used to feel central to who you were?",
+      "What kind of person do you want to be for the people you love most?",
+      "What's something about how we are together that you're proud of?",
+      "What's something about the way we communicate that you value?",
+      "What do you value most in a relationship?",
+      "What's something you wish I knew about how you handle difficult conversations?",
+    ],
+  },
+  vulnerable: {
+    name: "Vulnerable", intensity: "red", price: "£1.99",
+    desc: "For when you're ready to really open up. Take your time with these.",
+    questions: [
+      "What's something about yourself you're still learning to accept?",
+      "What's something you're more sensitive about than you let on?",
+      "What does feeling truly close to someone mean to you?",
+      "What's something you find hard to ask for even when you really need it?",
+      "When do you feel most truly yourself with me?",
+      "When you're going through something difficult, what do you need most?",
+      "What's something about yourself that a past relationship helped you understand?",
+      "What's something you needed from a past relationship that you didn't know how to ask for?",
+      "What's something you've never fully let yourself want because it felt too risky?",
+      "What's something you've always wanted someone to do for you that you've never asked for?",
+      "What's something about growing older that you find difficult to sit with?",
+      "When do you feel most cared for?",
+      "Is there something about our future that both excites and scares you?",
+      "What's something you're genuinely afraid of losing?",
+      "What's something about us that you hope we never lose?",
+      "What's something you've been meaning to say but keep putting off?",
+      "Is there something you wish we talked about more?",
+      "What's something about yourself that you like more since being with me?",
+      "What makes you feel most desired?",
+      "What's something about intimacy that you'd love to explore together?",
+      "What do you love about our intimate life?",
+      "What's something about intimacy that you find hard to talk about even with me?",
+      "What's something about our intimate life that you feel genuinely lucky to have?",
+      "What's something about being with you that I probably take for granted?",
+      "What's something you've had to accept about yourself that you wish was different?",
+    ],
+  },
+  us: {
+    name: "Us", intensity: "green", price: "£0.99",
+    desc: "The private world of two people. Questions only you two can answer.",
+    questions: [
+      "What's a word or phrase that only means something because of us?",
+      "What's something I do that you've quietly started doing too?",
+      "What's something about our dynamic that would surprise people who know us separately?",
+      "What's a small ritual we have that you'd never want to lose?",
+      "What's something you've learned about yourself by being around me?",
+      "What's a place that means something to us that wouldn't mean anything to anyone else?",
+      "What's something you've changed your mind about because of me?",
+      "What's something you notice I do when I'm happy?",
+      "What's something ordinary we do together that you find quietly wonderful?",
+      "What's something you'd want to tell the version of us from a year ago?",
+      "What's something about us that feels like it was always going to happen?",
+      "What's a decision I made that you were quietly rooting for?",
+      "What's something about being with me that feels easy in a way you didn't expect?",
+      "What's a moment you felt genuinely proud of me?",
+      "What's something about us that makes you feel lucky?",
+      "What's your favourite memory of us?",
+      "What's a small thing I did that told you a lot about me?",
+      "What's a time you felt most like a team?",
+      "What's an ordinary moment with me that you've found yourself thinking about often?",
+      "What's something we haven't done yet that you're quietly excited about?",
+      "What's a place you'd love to take me that you haven't yet?",
+      "What's something about us that you think gets better with time?",
+      "What's something about me that you hope never changes?",
+      "What's something about us that you think would make a good story one day?",
+      "What's something you'd want to remember about this exact time in our lives?",
+    ],
+  },
+};
+
+const LOCAL_PACKS_KEY = "wonder_local_packs";
+
 // ── Session persistence ──────────────────────────────────────
 const SESSION_KEY = "wonder_session";
 function saveSession(session) {
@@ -98,7 +239,7 @@ function WelcomeScreen({ onNext }) {
         <path d="M0 140 Q100 100 200 120 Q300 140 390 110 L390 200 L0 200 Z" fill="#E8E2D9" opacity="0.7"/>
         <path d="M0 155 Q70 135 150 148 Q230 161 310 142 Q350 133 390 140 L390 200 L0 200 Z" fill="#DDD6CB" opacity="0.5"/>
         <path d="M0 170 Q50 160 120 168 Q200 176 280 162 Q335 152 390 158 L390 200 L0 200 Z" fill="#C8BFB0" opacity="0.3"/>
-        <path d="M 80 200 C 100 185 125 175 140 160 C 158 143 148 130 165 118 C 182 106 205 108 218 96 " stroke="#B8B0A4" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.8"/>
+        <path d="M 80 200 C 100 185 125 175 140 160 C 158 143 148 130 165 118" stroke="#B8B0A4" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.8"/>
         <circle cx="50" cy="148" r="22" fill="#3D6B4F" opacity="0.15"/>
         <circle cx="36" cy="155" r="16" fill="#3D6B4F" opacity="0.12"/>
         <circle cx="62" cy="142" r="18" fill="#3D6B4F" opacity="0.13"/>
@@ -218,12 +359,34 @@ function ConnectScreen({ name, onConnect, onSkip, onBack }) {
         setLoading(false);
         return;
       }
-      const partner = users[0];
-      const me = await db.from("users").insert({ name, couple_code: name.toUpperCase().slice(0, 3) + Date.now(), partner_id: partner.id }).select();
-      await db.from("users").update({ partner_id: me[0].id }).eq("id", partner.id);
-      onConnect({ name, coupleCode: code.trim(), userId: me[0].id, partnerId: partner.id });
+      const owner = users[0];
+      const myName = name.trim().toLowerCase();
+
+      // Signing back in as the person who created this code
+      if (owner.name.trim().toLowerCase() === myName) {
+        onConnect({ name: owner.name, coupleCode: code.trim(), userId: owner.id, partnerId: owner.partner_id });
+        return;
+      }
+
+      // Code already has a partner — sign back in if the name matches, otherwise reject
+      if (owner.partner_id) {
+        const partnerRows = await db.from("users").select().eq("id", owner.partner_id);
+        const existing = partnerRows && partnerRows[0];
+        if (existing && existing.name.trim().toLowerCase() === myName) {
+          onConnect({ name: existing.name, coupleCode: code.trim(), userId: existing.id, partnerId: owner.id });
+          return;
+        }
+        setError("This code is already connected to two people. To sign back in, use the same name as before.");
+        setLoading(false);
+        return;
+      }
+
+      // Fresh join
+      const me = await db.from("users").insert({ name, couple_code: name.toUpperCase().slice(0, 3) + Date.now(), partner_id: owner.id }).select();
+      await db.from("users").update({ partner_id: me[0].id }).eq("id", owner.id);
+      onConnect({ name, coupleCode: code.trim(), userId: me[0].id, partnerId: owner.id });
     } catch (e) {
-      setError(`Error: ${e.message.slice(0, 100)}`);
+      setError(`Error: ${String(e.message || e).slice(0, 100)}`);
     }
     setLoading(false);
   }
@@ -253,7 +416,7 @@ function ConnectScreen({ name, onConnect, onSkip, onBack }) {
             </button>
             <button onClick={() => setMode("join")} style={{ width: "100%", padding: "20px", background: COLORS.white, border: `1.5px solid ${COLORS.creamDark}`, borderRadius: 16, textAlign: "left", cursor: "pointer" }}>
               <p style={{ fontFamily: "Lora, serif", fontSize: 16, color: COLORS.ink, marginBottom: 4 }}>I have a code</p>
-              <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, color: COLORS.inkMute, fontWeight: 300 }}>Enter the code your person shared</p>
+              <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, color: COLORS.inkMute, fontWeight: 300 }}>Enter the code your person shared — or your couple code to sign back in</p>
             </button>
           </div>
         )}
@@ -290,8 +453,8 @@ function ConnectScreen({ name, onConnect, onSkip, onBack }) {
           </div>
         )}
       </div>
-      <button onClick={onSkip} style={{ width: "100%", padding: "14px", background: "none", border: "none", fontFamily: "Inter, sans-serif", fontSize: 13, color: COLORS.inkMute, cursor: "pointer", fontWeight: 300 }}>
-        Skip for now — explore on my own
+      <button onClick={onSkip} style={{ width: "100%", padding: "16px", background: COLORS.white, border: `1.5px solid ${COLORS.creamDark}`, borderRadius: 16, fontFamily: "Lora, serif", fontSize: 15, color: COLORS.inkSoft, cursor: "pointer" }}>
+        Explore on my own first
       </button>
     </div>
   );
@@ -402,6 +565,10 @@ export default function WonderApp() {
   const [showVulnerablePause, setShowVulnerablePause] = useState(false);
   const [saveError, setSaveError] = useState(null);
   const [partnerName, setPartnerName] = useState(null);
+  const [ownedPacks, setOwnedPacks] = useState([]);
+  const [showSourcePicker, setShowSourcePicker] = useState(false);
+  const [pickerNote, setPickerNote] = useState(null);
+  const [expandedPack, setExpandedPack] = useState(null);
   const pollTimer = useRef(null);
 
   const pool = questions.filter(q => !q.discussed && !q.skipped);
@@ -436,6 +603,35 @@ export default function WonderApp() {
     }
   }
 
+  // Packs owned by this couple (or this device if browsing solo)
+  async function loadPacks() {
+    if (userSession?.coupleCode) {
+      try {
+        const rows = await db.from("couple_packs").select().eq("couple_code", userSession.coupleCode);
+        if (rows) setOwnedPacks(rows.map(r => r.pack));
+      } catch (e) {}
+    } else {
+      try {
+        const raw = localStorage.getItem(LOCAL_PACKS_KEY);
+        setOwnedPacks(raw ? JSON.parse(raw) : []);
+      } catch (e) {}
+    }
+  }
+
+  async function unlockPack(key) {
+    if (ownedPacks.includes(key)) return;
+    if (userSession?.coupleCode) {
+      try {
+        await db.from("couple_packs").insert({ couple_code: userSession.coupleCode, pack: key });
+        await loadPacks();
+      } catch (e) {}
+    } else {
+      const next = [...ownedPacks, key];
+      setOwnedPacks(next);
+      try { localStorage.setItem(LOCAL_PACKS_KEY, JSON.stringify(next)); } catch (e) {}
+    }
+  }
+
   // Find your person's name (their record points back at you)
   async function checkPartner() {
     if (!userSession?.userId || partnerName) return;
@@ -447,10 +643,11 @@ export default function WonderApp() {
 
   // Poll for new questions every 10 seconds
   useEffect(() => {
+    if (userSession) loadPacks();
     if (userSession?.coupleCode) {
       loadQuestions(userSession.coupleCode);
       checkPartner();
-      pollTimer.current = setInterval(() => { loadQuestions(userSession.coupleCode); checkPartner(); }, 10000);
+      pollTimer.current = setInterval(() => { loadQuestions(userSession.coupleCode); checkPartner(); loadPacks(); }, 10000);
     }
     return () => clearInterval(pollTimer.current);
   }, [userSession]);
@@ -527,10 +724,7 @@ export default function WonderApp() {
     setShowAddSheet(false);
   }
 
-  function drawQuestion() {
-    if (pool.length === 0) return;
-    const idx = Math.floor(Math.random() * pool.length);
-    const q = pool[idx];
+  function beginReveal(q) {
     setDrawnQuestion(q);
     setRevealed(false);
     if (navigator.vibrate) navigator.vibrate([10, 50, 20]);
@@ -542,16 +736,55 @@ export default function WonderApp() {
     }
   }
 
+  function drawQuestion() {
+    setPickerNote(null);
+    if (ownedPacks.length > 0) {
+      setShowSourcePicker(true);
+    } else {
+      drawFromPool();
+    }
+  }
+
+  function drawFromPool() {
+    setShowSourcePicker(false);
+    if (pool.length === 0) { setPickerNote("Your pool is empty — add a question first."); return; }
+    const q = pool[Math.floor(Math.random() * pool.length)];
+    beginReveal(q);
+  }
+
+  function packRemaining(key) {
+    const used = new Set(questions.map(q => q.text));
+    return PACKS[key].questions.filter(t => !used.has(t));
+  }
+
+  function drawFromPack(key) {
+    const remaining = packRemaining(key);
+    if (remaining.length === 0) { setPickerNote(`You've been through every ${PACKS[key].name} question — lovely work.`); return; }
+    setShowSourcePicker(false);
+    const text = remaining[Math.floor(Math.random() * remaining.length)];
+    beginReveal({ id: null, text, intensity: PACKS[key].intensity, author: "pack" });
+  }
+
   function confirmVulnerable() {
     setShowVulnerablePause(false);
     setShowDraw(true);
     setTimeout(() => setRevealed(true), 1200);
   }
 
+  async function recordPackQuestion(flags) {
+    if (userSession?.coupleCode && userSession?.userId) {
+      await db.from("questions").insert({ text: drawnQuestion.text, intensity: drawnQuestion.intensity, author_id: userSession.userId, couple_code: userSession.coupleCode, ...flags });
+      await loadQuestions(userSession.coupleCode);
+    } else {
+      setQuestions(prev => [{ id: Date.now(), text: drawnQuestion.text, intensity: drawnQuestion.intensity, author: "you", discussed: !!flags.discussed, skipped: !!flags.skipped }, ...prev]);
+    }
+  }
+
   async function markDiscussed() {
     try {
-      
-      if (userSession?.coupleCode) {
+      if (drawnQuestion.id === null) {
+        await recordPackQuestion({ discussed: true, skipped: false });
+      } else if (userSession?.coupleCode) {
         await db.from("questions").update({ discussed: true, skipped: false }).eq("id", drawnQuestion.id);
         await loadQuestions(userSession.coupleCode);
       } else {
@@ -564,8 +797,9 @@ export default function WonderApp() {
 
   async function skipQuestion() {
     try {
-      
-      if (userSession?.coupleCode) {
+      if (drawnQuestion.id === null) {
+        await recordPackQuestion({ discussed: false, skipped: true });
+      } else if (userSession?.coupleCode) {
         await db.from("questions").update({ skipped: true }).eq("id", drawnQuestion.id);
         await loadQuestions(userSession.coupleCode);
       } else {
@@ -594,6 +828,33 @@ export default function WonderApp() {
       {onboarding === "connect" && <ConnectScreen name={userName} onBack={() => setOnboarding("name")} onConnect={handleConnect} onSkip={handleSkip} />}
 
       {onboarding === "done" && (<>
+
+        {/* DRAW SOURCE PICKER */}
+        {showSourcePicker && (
+          <div className="sheet-overlay" onClick={(e) => e.target === e.currentTarget && setShowSourcePicker(false)}>
+            <div className="sheet">
+              <div className="sheet-handle" />
+              <h2 className="sheet-title">Draw from…</h2>
+              <p className="sheet-subtitle">Choose where tonight's question comes from.</p>
+              <button onClick={drawFromPool} disabled={pool.length === 0}
+                style={{ width: "100%", padding: "18px 20px", background: COLORS.white, border: `1.5px solid ${COLORS.creamDark}`, borderRadius: 16, textAlign: "left", cursor: pool.length > 0 ? "pointer" : "default", marginBottom: 10, opacity: pool.length > 0 ? 1 : 0.45 }}>
+                <p style={{ fontFamily: "Lora, serif", fontSize: 16, color: COLORS.ink, marginBottom: 3 }}>Our questions</p>
+                <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, color: COLORS.inkMute, fontWeight: 300 }}>{pool.length} waiting in your pool</p>
+              </button>
+              {ownedPacks.map(key => {
+                const remaining = packRemaining(key).length;
+                return (
+                  <button key={key} onClick={() => drawFromPack(key)} disabled={remaining === 0}
+                    style={{ width: "100%", padding: "18px 20px", background: COLORS.white, border: `1.5px solid ${COLORS.creamDark}`, borderLeft: `4px solid ${INTENSITY[PACKS[key].intensity].dot}`, borderRadius: 16, textAlign: "left", cursor: remaining > 0 ? "pointer" : "default", marginBottom: 10, opacity: remaining > 0 ? 1 : 0.45 }}>
+                    <p style={{ fontFamily: "Lora, serif", fontSize: 16, color: COLORS.ink, marginBottom: 3 }}>{PACKS[key].name}</p>
+                    <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, color: COLORS.inkMute, fontWeight: 300 }}>{remaining} you haven't drawn yet</p>
+                  </button>
+                );
+              })}
+              {pickerNote && <p style={{ fontSize: 12, color: COLORS.inkMute, textAlign: "center", marginTop: 8, fontWeight: 300 }}>{pickerNote}</p>}
+            </div>
+          </div>
+        )}
 
         {/* VULNERABLE PAUSE */}
         {showVulnerablePause && (
@@ -688,8 +949,8 @@ export default function WonderApp() {
                 <div className="stat-item"><span className="stat-number" style={{ color: COLORS.inkMute }}>{archive.length}</span><span className="stat-label">discussed</span></div>
                 <div className="stat-item"><span className="stat-number" style={{ color: COLORS.amber }}>{skipped.length}</span><span className="stat-label">saved</span></div>
               </div>
-              <button className="draw-btn" onClick={drawQuestion} disabled={pool.length === 0}>
-                {pool.length === 0 ? "No questions yet" : "Draw a question"}
+              <button className="draw-btn" onClick={drawQuestion} disabled={pool.length === 0 && ownedPacks.length === 0}>
+                {pool.length === 0 && ownedPacks.length === 0 ? "No questions yet" : "Draw a question"}
               </button>
             </div>
 
@@ -737,6 +998,7 @@ export default function WonderApp() {
                                   ? <span className="intensity-badge" style={{ backgroundColor: "#FFF0E6", color: "#C2410C" }}>🌶️</span>
                                   : <span className="intensity-badge" style={intensityStyle(q.intensity)}>{INTENSITY[q.intensity]?.label}</span>
                                 }
+                                <span className="author-tag">added by you</span>
                               </div>
                             </div>
                           ))}
@@ -829,27 +1091,36 @@ export default function WonderApp() {
               {tab === "packs" && (
                 <>
                   <p className="section-label">question packs</p>
-                  <p style={{ fontSize: 13, color: COLORS.inkMute, fontWeight: 300, lineHeight: 1.6, marginBottom: 24 }}>Curated questions for when you want a starting point. One-off purchase, yours to keep.</p>
-                  {[
-                    { name: "Light", desc: "For any moment together. Easy to answer, always interesting.", intensity: "green", price: "£0.99", count: 30 },
-                    { name: "Deep", desc: "For when you want to go somewhere more personal.", intensity: "amber", price: "£1.99", count: 30 },
-                    { name: "Vulnerable", desc: "For when you're ready to really open up. Take your time with these.", intensity: "red", price: "£1.99", count: 25 },
-                    { name: "Us", desc: "The private world of two people. Questions only you two can answer.", intensity: "green", price: "£0.99", count: 25 },
-                  ].map((pack, i) => (
-                    <div key={i} style={{ background: COLORS.white, borderRadius: 20, padding: "20px", marginBottom: 14, borderLeft: `4px solid ${INTENSITY[pack.intensity]?.dot}` }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
-                        <IntensityIndicator intensityKey={pack.intensity} />
-                        <div style={{ flex: 1 }}>
-                          <p style={{ fontFamily: "Lora, serif", fontSize: 16, fontWeight: 400, marginBottom: 2 }}>{pack.name}</p>
-                          <p style={{ fontSize: 11, color: COLORS.inkMute, fontWeight: 300 }}>{pack.count} questions</p>
+                  <p style={{ fontSize: 13, color: COLORS.inkMute, fontWeight: 300, lineHeight: 1.6, marginBottom: 24 }}>Curated questions for when you want a starting point. Free to unlock while Wonder is in beta — yours to keep.</p>
+                  {Object.entries(PACKS).map(([key, pack]) => {
+                    const owned = ownedPacks.includes(key);
+                    const isOpen = expandedPack === key;
+                    return (
+                      <div key={key} style={{ background: COLORS.white, borderRadius: 20, padding: "20px", marginBottom: 14, borderLeft: `4px solid ${INTENSITY[pack.intensity]?.dot}` }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
+                          <IntensityIndicator intensityKey={pack.intensity} />
+                          <div style={{ flex: 1, cursor: owned ? "pointer" : "default" }} onClick={() => owned && setExpandedPack(isOpen ? null : key)}>
+                            <p style={{ fontFamily: "Lora, serif", fontSize: 16, fontWeight: 400, marginBottom: 2 }}>{pack.name}{owned && <span style={{ fontSize: 11, color: COLORS.green, marginLeft: 8 }}>✓ unlocked</span>}</p>
+                            <p style={{ fontSize: 11, color: COLORS.inkMute, fontWeight: 300 }}>{pack.questions.length} questions{owned ? (isOpen ? " · tap to close" : " · tap to browse") : ""}</p>
+                          </div>
+                          {!owned && (
+                            <button onClick={() => unlockPack(key)} style={{ padding: "8px 16px", borderRadius: 24, border: "none", background: COLORS.ink, fontFamily: "Inter, sans-serif", fontSize: 12, fontWeight: 500, color: COLORS.cream, cursor: "pointer", whiteSpace: "nowrap" }}>
+                              Unlock free
+                            </button>
+                          )}
                         </div>
-                        <button style={{ padding: "8px 16px", borderRadius: 24, border: `1.5px solid ${COLORS.creamDark}`, background: "transparent", fontFamily: "Inter, sans-serif", fontSize: 12, fontWeight: 500, color: COLORS.inkSoft, cursor: "pointer", whiteSpace: "nowrap" }}>
-                          {pack.price}
-                        </button>
+                        <p style={{ fontSize: 12, color: COLORS.inkSoft, fontWeight: 300, lineHeight: 1.55, fontStyle: "italic", fontFamily: "Lora, serif" }}>{pack.desc}</p>
+                        {!owned && <p style={{ fontSize: 10, color: COLORS.inkMute, fontWeight: 300, marginTop: 8 }}>Will be {pack.price} after beta</p>}
+                        {owned && isOpen && (
+                          <div style={{ marginTop: 14, borderTop: `1px solid ${COLORS.creamDark}`, paddingTop: 14 }}>
+                            {pack.questions.map((q, qi) => (
+                              <p key={qi} style={{ fontFamily: "Lora, serif", fontSize: 13, color: COLORS.inkSoft, lineHeight: 1.5, marginBottom: 10, fontStyle: "italic" }}>"{q}"</p>
+                            ))}
+                          </div>
+                        )}
                       </div>
-                      <p style={{ fontSize: 12, color: COLORS.inkSoft, fontWeight: 300, lineHeight: 1.55, fontStyle: "italic", fontFamily: "Lora, serif" }}>{pack.desc}</p>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </>
               )}
             </div>
