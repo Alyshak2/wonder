@@ -566,6 +566,8 @@ export default function WonderApp() {
   const [vulnerableConsented, setVulnerableConsented] = useState(false);
   const [showSignOut, setShowSignOut] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [activeFilters, setActiveFilters] = useState(["green", "amber", "red", "spicy"]);
+  const [showFilter, setShowFilter] = useState(false);
   const [saveError, setSaveError] = useState(null);
   const [partnerName, setPartnerName] = useState(null);
   const [ownedPacks, setOwnedPacks] = useState([]);
@@ -750,8 +752,10 @@ export default function WonderApp() {
 
   function drawFromPool() {
     setShowSourcePicker(false);
+    const eligible = pool.filter(q => activeFilters.includes(q.intensity));
     if (pool.length === 0) { setPickerNote("Your pool is empty - add a question first."); return; }
-    const q = pool[Math.floor(Math.random() * pool.length)];
+    if (eligible.length === 0) { setPickerNote("No questions match your current filter. Tap the filter to widen it."); return; }
+    const q = eligible[Math.floor(Math.random() * eligible.length)];
     beginReveal(q);
   }
 
@@ -838,6 +842,44 @@ export default function WonderApp() {
 
       {onboarding === "done" && (<>
 
+        {/* INTENSITY FILTER SHEET */}
+        {showFilter && (() => {
+          const present = ["green", "amber", "red", "spicy"].filter(k => pool.some(q => q.intensity === k));
+          const toggle = (k) => {
+            setActiveFilters(prev => prev.includes(k) ? prev.filter(x => x !== k) : [...prev, k]);
+          };
+          return (
+            <div className="sheet-overlay" onClick={(e) => e.target === e.currentTarget && setShowFilter(false)}>
+              <div className="sheet">
+                <div className="sheet-handle" />
+                <h2 className="sheet-title">What kind of questions?</h2>
+                <p className="sheet-subtitle">Choose which feel right just now. This stays set until you change it.</p>
+                {present.length === 0 && (
+                  <p style={{ fontSize: 13, color: COLORS.inkMute, fontWeight: 300, textAlign: "center", padding: "20px 0" }}>Your pool is empty for now - add some questions first.</p>
+                )}
+                {present.map(k => {
+                  const on = activeFilters.includes(k);
+                  const count = pool.filter(q => q.intensity === k).length;
+                  return (
+                    <button key={k} onClick={() => toggle(k)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 12, padding: "16px 18px", background: on ? INTENSITY[k].bg : COLORS.white, border: `1.5px solid ${on ? INTENSITY[k].dot : COLORS.creamDark}`, borderRadius: 14, marginBottom: 10, cursor: "pointer", textAlign: "left" }}>
+                      <span style={{ width: 12, height: 12, borderRadius: "50%", background: INTENSITY[k].dot, flexShrink: 0 }} />
+                      <div style={{ flex: 1 }}>
+                        <span style={{ fontFamily: "Lora, serif", fontSize: 15, color: COLORS.ink }}>{INTENSITY[k].label}</span>
+                        <span style={{ fontSize: 11, color: COLORS.inkMute, fontWeight: 300, marginLeft: 8 }}>{count} waiting</span>
+                      </div>
+                      <span style={{ width: 22, height: 22, borderRadius: "50%", border: `1.5px solid ${on ? INTENSITY[k].dot : COLORS.creamDark}`, background: on ? INTENSITY[k].dot : "transparent", color: COLORS.white, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, flexShrink: 0 }}>{on ? "✓" : ""}</span>
+                    </button>
+                  );
+                })}
+                <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                  <button onClick={() => setActiveFilters(["green", "amber", "red", "spicy"])} style={{ flex: 1, padding: "12px", background: "none", border: `1.5px solid ${COLORS.creamDark}`, borderRadius: 12, fontFamily: "Inter, sans-serif", fontSize: 12, color: COLORS.inkSoft, cursor: "pointer" }}>Select all</button>
+                  <button onClick={() => setShowFilter(false)} style={{ flex: 1, padding: "12px", background: COLORS.ink, border: "none", borderRadius: 12, fontFamily: "Lora, serif", fontSize: 14, color: COLORS.cream, cursor: "pointer" }}>Done</button>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
         {/* PROFILE SHEET */}
         {showProfile && (
           <div className="sheet-overlay" onClick={(e) => e.target === e.currentTarget && setShowProfile(false)}>
@@ -906,7 +948,7 @@ export default function WonderApp() {
               <button onClick={drawFromPool} disabled={pool.length === 0}
                 style={{ width: "100%", padding: "18px 20px", background: COLORS.white, border: `1.5px solid ${COLORS.creamDark}`, borderRadius: 16, textAlign: "left", cursor: pool.length > 0 ? "pointer" : "default", marginBottom: 10, opacity: pool.length > 0 ? 1 : 0.45 }}>
                 <p style={{ fontFamily: "Lora, serif", fontSize: 16, color: COLORS.ink, marginBottom: 3 }}>Our questions</p>
-                <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, color: COLORS.inkMute, fontWeight: 300 }}>{pool.length} waiting in your pool</p>
+                <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, color: COLORS.inkMute, fontWeight: 300 }}>{pool.filter(q => activeFilters.includes(q.intensity)).length} waiting{activeFilters.length < 4 ? " in your filter" : " in your pool"}</p>
               </button>
               {ownedPacks.map(key => {
                 const remaining = packRemaining(key).length;
@@ -929,8 +971,7 @@ export default function WonderApp() {
             <div style={{ width: 48, height: 48, borderRadius: "50%", background: COLORS.redLight, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 32 }}>
               <span style={{ width: 10, height: 10, borderRadius: "50%", background: COLORS.red, display: "inline-block" }} />
             </div>
-            <h2 style={{ fontFamily: "Lora, serif", fontSize: 26, fontWeight: 400, color: COLORS.ink, marginBottom: 16, lineHeight: 1.3 }}>This one goes somewhere real.</h2>
-            <p style={{ fontFamily: "Inter, sans-serif", fontSize: 14, fontWeight: 300, color: COLORS.inkMute, lineHeight: 1.7, marginBottom: 48, maxWidth: 280 }}>Make sure you're both in a place where you can really listen to each other.</p>
+            <h2 style={{ fontFamily: "Lora, serif", fontSize: 26, fontWeight: 400, color: COLORS.ink, marginBottom: 48, lineHeight: 1.3 }}>This one goes somewhere real.</h2>
             <button onClick={confirmVulnerable} style={{ width: "100%", padding: "18px", background: COLORS.ink, color: COLORS.cream, border: "none", borderRadius: 16, fontFamily: "Lora, serif", fontSize: 17, cursor: "pointer", marginBottom: 14, boxShadow: "0 4px 20px rgba(28,25,23,0.18)" }}>We're ready</button>
             <button onClick={() => { setShowVulnerablePause(false); setDrawnQuestion(null); }} style={{ background: "none", border: "none", fontFamily: "Inter, sans-serif", fontSize: 13, color: COLORS.inkMute, cursor: "pointer", fontWeight: 300 }}>Not right now</button>
           </div>
@@ -1015,8 +1056,13 @@ export default function WonderApp() {
               <button className="draw-btn" onClick={drawQuestion} disabled={pool.length === 0 && ownedPacks.length === 0}>
                 {pool.length === 0 && ownedPacks.length === 0 ? "No questions yet" : "Draw a question"}
               </button>
-              <button onClick={() => { resetSheet(); setShowAddSheet(true); }} style={{ width: "100%", padding: "16px", background: "transparent", color: COLORS.inkSoft, border: `1.5px solid ${COLORS.creamDark}`, borderRadius: 20, fontFamily: "Lora, serif", fontSize: 16, cursor: "pointer", marginBottom: 4 }}>
+              <button onClick={() => { resetSheet(); setShowAddSheet(true); }} style={{ width: "100%", padding: "16px", background: "transparent", color: COLORS.inkSoft, border: `1.5px solid ${COLORS.creamDark}`, borderRadius: 20, fontFamily: "Lora, serif", fontSize: 16, cursor: "pointer", marginBottom: 8 }}>
                 + Add a question
+              </button>
+              <button onClick={() => setShowFilter(true)} style={{ width: "100%", padding: "2px", background: "none", border: "none", cursor: "pointer", textAlign: "center" }}>
+                <span style={{ fontSize: 11, color: COLORS.inkMute, fontFamily: "Inter, sans-serif", fontWeight: 300 }}>
+                  Drawing from: <span style={{ color: COLORS.inkSoft }}>{activeFilters.length === 4 ? "all questions" : activeFilters.length === 0 ? "nothing selected" : activeFilters.map(f => INTENSITY[f].label).join(", ")}</span>
+                </span>
               </button>
             </div>
 
