@@ -614,6 +614,7 @@ export default function WonderApp() {
   const [eveningNote, setEveningNote] = useState(null);
   const pollTimer = useRef(null);
   const navTabsRef = useRef(null);
+  const savedSectionRef = useRef(null);
 
   const pool = questions.filter(q => !q.discussed && !q.skipped);
   const archive = questions.filter(q => q.discussed);
@@ -927,6 +928,12 @@ export default function WonderApp() {
   function endEvening() {
     setEvening(null);
     setEveningStage(null);
+  }
+
+  // Jump to a tab and scroll the relevant section into view.
+  function jumpTo(tabName, ref) {
+    setTab(tabName);
+    setTimeout(() => { (ref?.current || navTabsRef.current)?.scrollIntoView({ behavior: "smooth", block: "start" }); }, 80);
   }
 
   function confirmVulnerable() {
@@ -1284,10 +1291,10 @@ export default function WonderApp() {
 
             <div style={{ padding: "20px 28px 0" }}>
               <div className="stats-strip">
-                <div className="stat-item"><span className="stat-number" style={{ color: COLORS.green }}>{pool.length}</span><span className="stat-label">waiting</span></div>
-                <div className="stat-item"><span className="stat-number" style={{ color: COLORS.inkMute }}>{archive.length}</span><span className="stat-label">discussed</span></div>
-                <div className="stat-item"><span className="stat-number" style={{ color: COLORS.amber }}>{skipped.length}</span><span className="stat-label">saved</span></div>
-                <div className="stat-item"><span className="stat-number" style={{ color: COLORS.red }}>{ownedPacks.length}</span><span className="stat-label">packs</span></div>
+                <button className="stat-item" onClick={() => jumpTo("pool", navTabsRef)} style={{ borderTop: 0, borderLeft: 0, borderBottom: 0, background: "none", outline: "none", cursor: "pointer", fontFamily: "inherit" }}><span className="stat-number" style={{ color: COLORS.green }}>{pool.length}</span><span className="stat-label">waiting</span></button>
+                <button className="stat-item" onClick={() => jumpTo("archive", navTabsRef)} style={{ borderTop: 0, borderLeft: 0, borderBottom: 0, background: "none", outline: "none", cursor: "pointer", fontFamily: "inherit" }}><span className="stat-number" style={{ color: COLORS.inkMute }}>{archive.length}</span><span className="stat-label">discussed</span></button>
+                <button className="stat-item" onClick={() => jumpTo("pool", savedSectionRef)} style={{ borderTop: 0, borderLeft: 0, borderBottom: 0, background: "none", outline: "none", cursor: "pointer", fontFamily: "inherit" }}><span className="stat-number" style={{ color: COLORS.amber }}>{skipped.length}</span><span className="stat-label">saved</span></button>
+                <button className="stat-item" onClick={() => jumpTo("packs", navTabsRef)} style={{ borderTop: 0, borderLeft: 0, borderBottom: 0, background: "none", outline: "none", cursor: "pointer", fontFamily: "inherit" }}><span className="stat-number" style={{ color: COLORS.red }}>{ownedPacks.length}</span><span className="stat-label">packs</span></button>
               </div>
               <button className="draw-btn" onClick={drawQuestion} disabled={pool.length === 0 && ownedPacks.length === 0}>
                 {pool.length === 0 && ownedPacks.length === 0 ? "No questions yet" : "Draw a question"}
@@ -1303,7 +1310,7 @@ export default function WonderApp() {
               <div style={{ textAlign: "center" }}>
                 <button onClick={evening ? resumeEvening : startEvening} style={{ display: "inline-block", maxWidth: "78%", padding: "9px 16px", background: COLORS.creamDark, border: "none", borderRadius: 14, cursor: "pointer", textAlign: "center" }}>
                   <span style={{ display: "block", fontSize: 13, color: COLORS.inkSoft, fontFamily: "Lora, serif" }}>
-                    {evening ? "Resume your evening →" : "Evening Together"}
+                    {evening ? "Resume your evening →" : "Evening Together ›"}
                   </span>
                   {!evening && <span style={{ display: "block", fontSize: 9, color: COLORS.inkMute, fontWeight: 300, fontFamily: "Inter, sans-serif", marginTop: 3 }}>a dedicated way to spend an evening</span>}
                 </button>
@@ -1378,7 +1385,7 @@ export default function WonderApp() {
                     </>
                   )}
                   {skipped.length > 0 && (
-                    <>
+                    <div ref={savedSectionRef}>
                       <p className="section-label" style={{ marginTop: 28 }}>saved for later</p>
                       {skipped.map(q => (
                         <div key={q.id} className="question-card" style={{ opacity: 0.6, borderLeft: `4px solid ${INTENSITY[q.intensity]?.dot}` }}>
@@ -1402,7 +1409,7 @@ export default function WonderApp() {
                           </div>
                         </div>
                       ))}
-                    </>
+                    </div>
                   )}
                 </>
               )}
