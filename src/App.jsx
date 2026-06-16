@@ -613,6 +613,7 @@ export default function WonderApp() {
   const [eveningStage, setEveningStage] = useState(null); // "opening" | "questions" | "closing" | null
   const [eveningNote, setEveningNote] = useState(null);
   const pollTimer = useRef(null);
+  const navTabsRef = useRef(null);
 
   const pool = questions.filter(q => !q.discussed && !q.skipped);
   const archive = questions.filter(q => q.discussed);
@@ -833,7 +834,7 @@ export default function WonderApp() {
       setEveningNote("There isn't quite enough yet to make an evening of it. Add a few more questions, or open a pack, and it'll be ready.");
       return;
     }
-    setEvening({ questions: chosen, position: 0, active: true });
+    setEvening({ questions: chosen, position: 0, active: true, answered: [] });
     setEveningNote(null);
     setEveningStage("opening");
   }
@@ -844,42 +845,83 @@ export default function WonderApp() {
 
   function restartEvening() {
     if (!evening) return;
-    setEvening({ ...evening, position: 0 });
+    setEvening({ ...evening, position: 0, answered: [] });
     setEveningStage("opening");
   }
 
+  // Records the result of answering one evening question.
+  // Returns a descriptor {dbId, wasNew} so eveningBack can undo it precisely.
   async function eveningArchive(q, asDiscussed) {
-    // Pack questions (id null) get inserted; own questions get updated.
     try {
       if (q.id === null) {
+        // pack question - a new row is created either way
         if (userSession?.coupleCode && userSession?.userId) {
-          await db.from("questions").insert({ text: q.text, intensity: q.intensity, author_id: userSession.userId, couple_code: userSession.coupleCode, discussed: asDiscussed, skipped: !asDiscussed });
+          const inserted = await db.from("questions").insert({ text: q.text, intensity: q.intensity, author_id: userSession.userId, couple_code: userSession.coupleCode, discussed: asDiscussed, skipped: !asDiscussed }).select();
           await loadQuestions(userSession.coupleCode);
+          return { dbId: inserted?.[0]?.id, wasNew: true };
         } else {
-          setQuestions(prev => [{ id: Date.now() + Math.random(), text: q.text, intensity: q.intensity, author: "you", discussed: asDiscussed, skipped: !asDiscussed }, ...prev]);
+          const localId = Date.now() + Math.random();
+          setQuestions(prev => [{ id: localId, text: q.text, intensity: q.intensity, author: "you", discussed: asDiscussed, skipped: !asDiscussed }, ...prev]);
+          return { dbId: localId, wasNew: true };
         }
-      } else if (asDiscussed) {
-        if (userSession?.coupleCode) {
-          await db.from("questions").update({ discussed: true, skipped: false }).eq("id", q.id);
-          await loadQuestions(userSession.coupleCode);
-        } else {
-          setQuestions(prev => prev.map(x => x.id === q.id ? { ...x, discussed: true, skipped: false } : x));
+      } else {
+        if (asDiscussed) {
+          if (userSession?.coupleCode) {
+            await db.from("questions").update({ discussed: true, skipped: false }).eq("id", q.id);
+            await loadQuestions(userSession.coupleCode);
+          } else {
+            setQuestions(prev => prev.map(x => x.id === q.id ? { ...x, discussed: true, skipped: false } : x));
+          }
         }
+        // "save for later" on an own question needs no change - it's already sitting in the pool
+        return { dbId: q.id, wasNew: false };
       }
-      // if a real question is "saved for later", we simply leave it in the pool (no change)
-    } catch (e) {}
+    } catch (e) {
+      return null;
+    }
   }
 
   async function eveningNext(saveForLater) {
     const q = evening.questions[evening.position];
-    await eveningArchive(q, !saveForLater);
+    const result = await eveningArchive(q, !saveForLater);
+    const answered = [...(evening.answered || [])];
+    answered[evening.position] = result;
     const nextPos = evening.position + 1;
     if (nextPos >= evening.questions.length) {
-      setEvening({ ...evening, active: false });
+      setEvening({ ...evening, answered, active: false });
       setEveningStage("closing");
     } else {
-      setEvening({ ...evening, position: nextPos });
+      setEvening({ ...evening, answered, position: nextPos });
     }
+  }
+
+  // Undoes whatever happened to the previous question, then steps back to it.
+  async function eveningBack() {
+    if (!evening || evening.position === 0) return;
+    const prevIndex = evening.position - 1;
+    const entry = evening.answered?.[prevIndex];
+    try {
+      if (entry) {
+        if (entry.wasNew) {
+          if (userSession?.coupleCode) {
+            await db.from("questions").delete().eq("id", entry.dbId);
+            await loadQuestions(userSession.coupleCode);
+          } else {
+            setQuestions(prev => prev.filter(x => x.id !== entry.dbId));
+          }
+        } else {
+          if (userSession?.coupleCode) {
+            await db.from("questions").update({ discussed: false, skipped: false }).eq("id", entry.dbId);
+            await loadQuestions(userSession.coupleCode);
+          } else {
+            setQuestions(prev => prev.map(x => x.id === entry.dbId ? { ...x, discussed: false, skipped: false } : x));
+          }
+        }
+      }
+    } catch (e) {}
+    const answered = [...(evening.answered || [])];
+    answered[prevIndex] = undefined;
+    setEvening({ ...evening, position: prevIndex, answered, active: true });
   }
 
   function endEvening() {
@@ -1129,6 +1171,9 @@ export default function WonderApp() {
                     {pos + 1 === n ? "Finish" : "Next"}
                   </button>
                   <button onClick={() => eveningNext(true)} style={{ background: "none", border: "none", fontFamily: "Inter, sans-serif", fontSize: 13, color: COLORS.inkMute, cursor: "pointer", fontWeight: 300 }}>Save this one for later</button>
+                  {pos > 0 && (
+                    <button onClick={eveningBack} style={{ background: "none", border: "none", fontFamily: "Inter, sans-serif", fontSize: 12, color: COLORS.inkMute, cursor: "pointer", fontWeight: 300, marginTop: 4 }}>‹ back to the previous question</button>
+                  )}
                 </div>
               </div>
             </div>
@@ -1148,7 +1193,7 @@ export default function WonderApp() {
               {missingDeep && (
                 <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, fontWeight: 300, color: COLORS.inkMute, lineHeight: 1.6, marginBottom: 32, maxWidth: 290 }}>
                   When you want to go further, the Deep and Vulnerable packs hold more questions of that kind.{" "}
-                  <button onClick={() => { endEvening(); setTab("packs"); }} style={{ background: "none", border: "none", padding: 0, color: COLORS.green, fontSize: 12, cursor: "pointer", textDecoration: "underline", fontFamily: "Inter, sans-serif" }}>see packs</button>
+                  <button onClick={() => { endEvening(); setTab("packs"); setTimeout(() => navTabsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 80); }} style={{ background: "none", border: "none", padding: 0, color: COLORS.green, fontSize: 12, cursor: "pointer", textDecoration: "underline", fontFamily: "Inter, sans-serif" }}>see packs</button>
                 </p>
               )}
               <button onClick={endEvening} style={{ width: "100%", padding: "18px", background: COLORS.ink, color: COLORS.cream, border: "none", borderRadius: 16, fontFamily: "Lora, serif", fontSize: 17, cursor: "pointer", boxShadow: "0 4px 20px rgba(28,25,23,0.18)" }}>Done</button>
@@ -1252,20 +1297,22 @@ export default function WonderApp() {
                   Drawing from: <span style={{ color: COLORS.inkSoft }}>{activeFilters.length === 4 ? "all questions" : activeFilters.length === 0 ? "nothing selected" : activeFilters.map(f => INTENSITY[f].label).join(", ")}</span>
                 </span>
               </button>
-              <button onClick={() => { resetSheet(); setShowAddSheet(true); }} style={{ width: "100%", padding: "16px", background: "transparent", color: COLORS.inkSoft, border: `1.5px solid ${COLORS.creamDark}`, borderRadius: 20, fontFamily: "Lora, serif", fontSize: 16, cursor: "pointer", marginBottom: 10 }}>
+              <button onClick={() => { resetSheet(); setShowAddSheet(true); }} style={{ width: "100%", padding: "16px", background: COLORS.white, color: COLORS.ink, border: `1.5px solid ${COLORS.creamDark}`, borderRadius: 20, fontFamily: "Lora, serif", fontSize: 16, cursor: "pointer", marginBottom: 14, boxShadow: "0 3px 14px rgba(28,25,23,0.08)" }}>
                 + Add a question
               </button>
-              <button onClick={evening ? resumeEvening : startEvening} style={{ width: "100%", padding: "14px", background: COLORS.creamDark, border: "none", borderRadius: 16, cursor: "pointer", textAlign: "center", marginBottom: 6 }}>
-                <span style={{ display: "block", fontSize: 15, color: COLORS.ink, fontFamily: "Lora, serif" }}>
-                  {evening ? "Resume your evening →" : "Evening Together"}
-                </span>
-                {!evening && <span style={{ display: "block", fontSize: 10, color: COLORS.inkMute, fontWeight: 300, fontFamily: "Inter, sans-serif", marginTop: 3 }}>a dedicated way to spend an evening</span>}
-              </button>
+              <div style={{ textAlign: "center" }}>
+                <button onClick={evening ? resumeEvening : startEvening} style={{ display: "inline-block", maxWidth: "78%", padding: "9px 16px", background: COLORS.creamDark, border: "none", borderRadius: 14, cursor: "pointer", textAlign: "center" }}>
+                  <span style={{ display: "block", fontSize: 13, color: COLORS.inkSoft, fontFamily: "Lora, serif" }}>
+                    {evening ? "Resume your evening →" : "Evening Together"}
+                  </span>
+                  {!evening && <span style={{ display: "block", fontSize: 9, color: COLORS.inkMute, fontWeight: 300, fontFamily: "Inter, sans-serif", marginTop: 3 }}>a dedicated way to spend an evening</span>}
+                </button>
+              </div>
               {eveningNote && <p style={{ fontSize: 12, color: COLORS.inkMute, fontWeight: 300, textAlign: "center", lineHeight: 1.5, marginBottom: 8, marginTop: 6 }}>{eveningNote}</p>}
             </div>
 
             <div className="scroll-area">
-              <div className="nav-tabs" style={{ marginBottom: 24 }}>
+              <div className="nav-tabs" ref={navTabsRef} style={{ marginBottom: 24 }}>
                 <button className={`nav-tab ${tab === "pool" ? "active" : ""}`} onClick={() => setTab("pool")}>
                   Pool {pool.length > 0 && <span className="notification-dot" />}
                 </button>
