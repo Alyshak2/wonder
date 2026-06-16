@@ -259,9 +259,9 @@ function clearSession() {
 function WelcomeScreen({ onNext }) {
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between", background: COLORS.cream }}>
-      {/* Concept B - the path alone */}
-      <svg width="100%" viewBox="0 0 390 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: "block", flexShrink: 0 }}>
-        <rect width="390" height="200" fill="#F0EBE3"/>
+      {/* Concept B - the path alone (scaled to a shorter, proportional frame) */}
+      <svg width="100%" viewBox="0 0 390 150" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: "block", flexShrink: 0 }}>
+        <rect width="390" height="150" fill="#F0EBE3"/>
         <defs>
           <linearGradient id="skyB" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#EBF2ED" stopOpacity="0.6"/>
@@ -269,21 +269,21 @@ function WelcomeScreen({ onNext }) {
             <stop offset="100%" stopColor="#F0EBE3" stopOpacity="0"/>
           </linearGradient>
         </defs>
-        <rect width="390" height="200" fill="url(#skyB)"/>
-        <path d="M0 140 Q100 100 200 120 Q300 140 390 110 L390 200 L0 200 Z" fill="#E8E2D9" opacity="0.7"/>
-        <path d="M0 155 Q70 135 150 148 Q230 161 310 142 Q350 133 390 140 L390 200 L0 200 Z" fill="#DDD6CB" opacity="0.5"/>
-        <path d="M0 170 Q50 160 120 168 Q200 176 280 162 Q335 152 390 158 L390 200 L0 200 Z" fill="#C8BFB0" opacity="0.3"/>
-        <path d="M 96 200 C 128 188 96 172 132 160 C 170 148 200 150 188 130 C 180 116 232 116 245 106" stroke="#B8B0A4" strokeWidth="2.4" strokeLinecap="round" fill="none" opacity="0.85"/>
-        <circle cx="50" cy="148" r="22" fill="#3D6B4F" opacity="0.15"/>
-        <circle cx="36" cy="155" r="16" fill="#3D6B4F" opacity="0.12"/>
-        <circle cx="62" cy="142" r="18" fill="#3D6B4F" opacity="0.13"/>
-        <line x1="50" y1="168" x2="50" y2="200" stroke="#3D6B4F" strokeWidth="2" opacity="0.2"/>
-        <circle cx="310" cy="138" r="20" fill="#3D6B4F" opacity="0.13"/>
-        <circle cx="328" cy="144" r="15" fill="#3D6B4F" opacity="0.11"/>
-        <circle cx="295" cy="145" r="16" fill="#3D6B4F" opacity="0.12"/>
-        <path d="M 0 118 Q 40 108 80 112 Q 120 116 160 108 Q 200 100 245 104 Q 290 108 320 102 Q 355 95 390 98 L390 118 L0 118 Z" fill="#3D6B4F" opacity="0.18"/>
-        <ellipse cx="245" cy="58" rx="60" ry="30" fill="#FEF3C7" opacity="0.35"/>
-        <ellipse cx="245" cy="58" rx="30" ry="16" fill="#FDE68A" opacity="0.2"/>
+        <rect width="390" height="150" fill="url(#skyB)"/>
+        <path d="M0 105 Q100 75 200 90 Q300 105 390 82.5 L390 150 L0 150 Z" fill="#E8E2D9" opacity="0.7"/>
+        <path d="M0 116.25 Q70 101.25 150 111 Q230 120.75 310 106.5 Q350 99.75 390 105 L390 150 L0 150 Z" fill="#DDD6CB" opacity="0.5"/>
+        <path d="M0 127.5 Q50 120 120 126 Q200 132 280 121.5 Q335 114 390 118.5 L390 150 L0 150 Z" fill="#C8BFB0" opacity="0.3"/>
+        <path d="M 96 150 C 128 141 96 129 132 120 C 170 111 200 112.5 188 97.5 C 180 87 232 87 245 79.5" stroke="#B8B0A4" strokeWidth="2.4" strokeLinecap="round" fill="none" opacity="0.85"/>
+        <circle cx="50" cy="111" r="16.5" fill="#3D6B4F" opacity="0.15"/>
+        <circle cx="36" cy="116.25" r="12" fill="#3D6B4F" opacity="0.12"/>
+        <circle cx="62" cy="106.5" r="13.5" fill="#3D6B4F" opacity="0.13"/>
+        <line x1="50" y1="126" x2="50" y2="150" stroke="#3D6B4F" strokeWidth="2" opacity="0.2"/>
+        <circle cx="310" cy="103.5" r="15" fill="#3D6B4F" opacity="0.13"/>
+        <circle cx="328" cy="108" r="11.25" fill="#3D6B4F" opacity="0.11"/>
+        <circle cx="295" cy="108.75" r="12" fill="#3D6B4F" opacity="0.12"/>
+        <path d="M 0 88.5 Q 40 81 80 84 Q 120 87 160 81 Q 200 75 245 78 Q 290 81 320 76.5 Q 355 71.25 390 73.5 L390 88.5 L0 88.5 Z" fill="#3D6B4F" opacity="0.18"/>
+        <ellipse cx="245" cy="43.5" rx="60" ry="22.5" fill="#FEF3C7" opacity="0.35"/>
+        <ellipse cx="245" cy="43.5" rx="30" ry="12" fill="#FDE68A" opacity="0.2"/>
       </svg>
       <div style={{ padding: "28px 32px 0" }}>
         <div style={{ width: 52, height: 52, borderRadius: "22.4%", background: COLORS.white, border: `1.5px solid ${COLORS.creamDark}`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 24 }}>
@@ -305,6 +305,7 @@ function WelcomeScreen({ onNext }) {
           {[
             { dot: "#3D6B4F", text: "Questions that matter to you, not to anyone else" },
             { dot: "#B45309", text: "Drawn randomly when you're ready" },
+            { dot: "#9B2335", text: "A quiet record of everything you've talked about" },
           ].map((item, i) => (
             <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
               <div style={{ width: 7, height: 7, borderRadius: "50%", background: item.dot, flexShrink: 0 }} />
