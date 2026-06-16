@@ -300,12 +300,11 @@ function WelcomeScreen({ onNext }) {
         <p style={{ fontFamily: "Inter, sans-serif", fontSize: 13, fontWeight: 300, color: COLORS.inkMute, lineHeight: 1.7, marginBottom: 8 }}>For two people who want to know each other better.</p>
         <p style={{ fontFamily: "Inter, sans-serif", fontSize: 13, fontWeight: 400, color: COLORS.inkSoft, lineHeight: 1.7, fontStyle: "italic" }}>One phone. Present together. Real conversations.</p>
       </div>
-      <div style={{ padding: "24px 32px 56px" }}>
-        <div style={{ marginBottom: 32 }}>
+      <div style={{ padding: "24px 32px 44px" }}>
+        <div style={{ marginBottom: 26 }}>
           {[
             { dot: "#3D6B4F", text: "Questions that matter to you, not to anyone else" },
             { dot: "#B45309", text: "Drawn randomly when you're ready" },
-            { dot: "#9B2335", text: "A quiet record of everything you've talked about" },
           ].map((item, i) => (
             <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
               <div style={{ width: 7, height: 7, borderRadius: "50%", background: item.dot, flexShrink: 0 }} />
@@ -316,7 +315,7 @@ function WelcomeScreen({ onNext }) {
         <button onClick={onNext} style={{ width: "100%", padding: "18px", background: COLORS.ink, color: COLORS.cream, border: "none", borderRadius: 16, fontFamily: "Lora, serif", fontSize: 17, fontWeight: 400, cursor: "pointer", boxShadow: "0 4px 20px rgba(28,25,23,0.18)" }}>
           Get started
         </button>
-        <p style={{ textAlign: "center", fontSize: 11, color: COLORS.inkMute, fontWeight: 300, marginTop: 14, fontFamily: "Inter, sans-serif" }}>No account needed to try it</p>
+        <p style={{ textAlign: "center", fontSize: 11, color: COLORS.inkMute, fontWeight: 300, marginTop: 12, fontFamily: "Inter, sans-serif" }}>No account needed to try it</p>
       </div>
     </div>
   );
