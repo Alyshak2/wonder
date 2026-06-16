@@ -206,6 +206,40 @@ const PACKS = {
 
 const LOCAL_PACKS_KEY = "wonder_local_packs";
 
+// ── Evening Together: selection + ordering ───────────────────
+const EVENING_ORDER = ["green", "amber", "red", "spicy"];
+const EVENING_SIZE = 6;
+const EVENING_MIN = 4;
+
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Soft-balanced: spread across present levels (round-robin draft), cap at 6,
+// then order gentle -> deeper -> vulnerable -> playful. Returns null if under the floor.
+function selectEvening(eligible) {
+  if (eligible.length < EVENING_MIN) return null;
+  const buckets = {};
+  for (const lvl of EVENING_ORDER) buckets[lvl] = shuffleArray(eligible.filter(q => q.intensity === lvl));
+  const present = EVENING_ORDER.filter(lvl => buckets[lvl].length > 0);
+  const chosen = [];
+  let progressed = true;
+  while (chosen.length < EVENING_SIZE && progressed) {
+    progressed = false;
+    for (const lvl of present) {
+      if (chosen.length >= EVENING_SIZE) break;
+      if (buckets[lvl].length > 0) { chosen.push(buckets[lvl].shift()); progressed = true; }
+    }
+  }
+  chosen.sort((a, b) => EVENING_ORDER.indexOf(a.intensity) - EVENING_ORDER.indexOf(b.intensity));
+  return chosen;
+}
+
 // ── Session persistence ──────────────────────────────────────
 const SESSION_KEY = "wonder_session";
 function saveSession(session) {
@@ -574,6 +608,10 @@ export default function WonderApp() {
   const [showSourcePicker, setShowSourcePicker] = useState(false);
   const [pickerNote, setPickerNote] = useState(null);
   const [expandedPack, setExpandedPack] = useState(null);
+  // Evening Together state
+  const [evening, setEvening] = useState(null); // { questions:[], position:int, active:bool }
+  const [eveningStage, setEveningStage] = useState(null); // "opening" | "questions" | "closing" | null
+  const [eveningNote, setEveningNote] = useState(null);
   const pollTimer = useRef(null);
 
   const pool = questions.filter(q => !q.discussed && !q.skipped);
@@ -772,6 +810,83 @@ export default function WonderApp() {
     beginReveal({ id: null, text, intensity: PACKS[key].intensity, author: "pack" });
   }
 
+  // ── Evening Together ──
+  function eveningEligible() {
+    // Combined pool: own + partner questions, plus owned-pack questions not yet used.
+    const used = new Set(questions.map(q => q.text));
+    const ownEligible = pool.filter(q => activeFilters.includes(q.intensity));
+    const packEligible = [];
+    for (const key of ownedPacks) {
+      for (const text of PACKS[key].questions) {
+        if (!used.has(text) && activeFilters.includes(PACKS[key].intensity)) {
+          packEligible.push({ id: null, text, intensity: PACKS[key].intensity, author: "pack" });
+        }
+      }
+    }
+    return [...ownEligible, ...packEligible];
+  }
+
+  function startEvening() {
+    setPickerNote(null);
+    const chosen = selectEvening(eveningEligible());
+    if (!chosen) {
+      setEveningNote("There isn't quite enough yet to make an evening of it. Add a few more questions, or open a pack, and it'll be ready.");
+      return;
+    }
+    setEvening({ questions: chosen, position: 0, active: true });
+    setEveningNote(null);
+    setEveningStage("opening");
+  }
+
+  function resumeEvening() {
+    if (evening) setEveningStage("questions");
+  }
+
+  function restartEvening() {
+    if (!evening) return;
+    setEvening({ ...evening, position: 0 });
+    setEveningStage("opening");
+  }
+
+  async function eveningArchive(q, asDiscussed) {
+    // Pack questions (id null) get inserted; own questions get updated.
+    try {
+      if (q.id === null) {
+        if (userSession?.coupleCode && userSession?.userId) {
+          await db.from("questions").insert({ text: q.text, intensity: q.intensity, author_id: userSession.userId, couple_code: userSession.coupleCode, discussed: asDiscussed, skipped: !asDiscussed });
+          await loadQuestions(userSession.coupleCode);
+        } else {
+          setQuestions(prev => [{ id: Date.now() + Math.random(), text: q.text, intensity: q.intensity, author: "you", discussed: asDiscussed, skipped: !asDiscussed }, ...prev]);
+        }
+      } else if (asDiscussed) {
+        if (userSession?.coupleCode) {
+          await db.from("questions").update({ discussed: true, skipped: false }).eq("id", q.id);
+          await loadQuestions(userSession.coupleCode);
+        } else {
+          setQuestions(prev => prev.map(x => x.id === q.id ? { ...x, discussed: true, skipped: false } : x));
+        }
+      }
+      // if a real question is "saved for later", we simply leave it in the pool (no change)
+    } catch (e) {}
+  }
+
+  async function eveningNext(saveForLater) {
+    const q = evening.questions[evening.position];
+    await eveningArchive(q, !saveForLater);
+    const nextPos = evening.position + 1;
+    if (nextPos >= evening.questions.length) {
+      setEvening({ ...evening, active: false });
+      setEveningStage("closing");
+    } else {
+      setEvening({ ...evening, position: nextPos });
+    }
+  }
+
+  function endEvening() {
+    setEvening(null);
+    setEveningStage(null);
+  }
+
   function confirmVulnerable() {
     setVulnerableConsented(true);
     setShowVulnerablePause(false);
@@ -965,6 +1080,82 @@ export default function WonderApp() {
           </div>
         )}
 
+        {/* EVENING: OPENING */}
+        {eveningStage === "opening" && evening && (
+          <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "48px 32px", background: COLORS.cream, textAlign: "center" }}>
+            <p style={{ fontFamily: "Inter, sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "1.5px", textTransform: "uppercase", color: COLORS.inkMute, marginBottom: 28 }}>Evening Together</p>
+            <h2 style={{ fontFamily: "Lora, serif", fontSize: 27, fontWeight: 400, color: COLORS.ink, marginBottom: 20, lineHeight: 1.35 }}>Settle in.</h2>
+            <p style={{ fontFamily: "Inter, sans-serif", fontSize: 14, fontWeight: 300, color: COLORS.inkMute, lineHeight: 1.7, marginBottom: 16, maxWidth: 300 }}>
+              A handful of questions, one after another, at your own pace. Some may go somewhere real - that's the point. There's no rush and no need to finish.
+            </p>
+            {activeFilters.length < 4 && (
+              <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, fontWeight: 300, color: COLORS.inkSoft, lineHeight: 1.6, marginBottom: 16, maxWidth: 300, fontStyle: "italic" }}>
+                Tonight's evening will stay within the levels you've chosen ({activeFilters.map(f => INTENSITY[f].label).join(", ")}).{" "}
+                <button onClick={() => { setEveningStage(null); setShowFilter(true); }} style={{ background: "none", border: "none", padding: 0, color: COLORS.green, fontSize: 12, cursor: "pointer", textDecoration: "underline", fontFamily: "Inter, sans-serif" }}>adjust</button>
+              </p>
+            )}
+            <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, color: COLORS.inkMute, fontWeight: 300, marginBottom: 40 }}>{evening.questions.length} questions · about {Math.round(evening.questions.length * 6)}-{Math.round(evening.questions.length * 9)} minutes</p>
+            <button onClick={() => setEveningStage("questions")} style={{ width: "100%", padding: "18px", background: COLORS.ink, color: COLORS.cream, border: "none", borderRadius: 16, fontFamily: "Lora, serif", fontSize: 17, cursor: "pointer", marginBottom: 14, boxShadow: "0 4px 20px rgba(28,25,23,0.18)" }}>Begin</button>
+            <button onClick={endEvening} style={{ background: "none", border: "none", fontFamily: "Inter, sans-serif", fontSize: 13, color: COLORS.inkMute, cursor: "pointer", fontWeight: 300 }}>Not now</button>
+          </div>
+        )}
+
+        {/* EVENING: QUESTIONS */}
+        {eveningStage === "questions" && evening && evening.questions[evening.position] && (() => {
+          const q = evening.questions[evening.position];
+          const n = evening.questions.length;
+          const pos = evening.position;
+          return (
+            <div className="draw-screen">
+              <div style={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 40 }}>
+                <button className="back-btn" style={{ marginBottom: 0 }} onClick={() => setEveningStage(null)}>‹ pause</button>
+                <div style={{ display: "flex", gap: 5 }}>
+                  {evening.questions.map((_, i) => (
+                    <div key={i} style={{ width: 7, height: 7, borderRadius: "50%", background: i < pos ? COLORS.inkMute : i === pos ? INTENSITY[q.intensity].dot : COLORS.creamDark, transition: "background 0.3s ease" }} />
+                  ))}
+                </div>
+                <span style={{ fontSize: 12, color: COLORS.inkMute, fontFamily: "Inter, sans-serif", fontWeight: 300 }}>{pos + 1} of {n}</span>
+              </div>
+              <div style={{ width: "100%" }}>
+                <div className="draw-card" style={{ background: INTENSITY[q.intensity]?.bg || COLORS.white, borderLeft: `4px solid ${INTENSITY[q.intensity]?.dot}`, animation: "revealCard 0.6s cubic-bezier(0.16,1,0.3,1) forwards" }}>
+                  <div className="draw-card-intensity">
+                    <IntensityIndicator intensityKey={q.intensity} />
+                    <span style={{ fontSize: 11, fontWeight: 500, color: INTENSITY[q.intensity]?.color, letterSpacing: "0.5px", textTransform: "uppercase" }}>{INTENSITY[q.intensity]?.label}</span>
+                  </div>
+                  <p className="draw-question">"{q.text}"</p>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 28 }}>
+                  <button onClick={() => eveningNext(false)} style={{ width: "100%", padding: "18px", background: COLORS.ink, color: COLORS.cream, border: "none", borderRadius: 16, fontFamily: "Lora, serif", fontSize: 17, cursor: "pointer", boxShadow: "0 4px 20px rgba(28,25,23,0.18)" }}>
+                    {pos + 1 === n ? "Finish" : "Next"}
+                  </button>
+                  <button onClick={() => eveningNext(true)} style={{ background: "none", border: "none", fontFamily: "Inter, sans-serif", fontSize: 13, color: COLORS.inkMute, cursor: "pointer", fontWeight: 300 }}>Save this one for later</button>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* EVENING: CLOSING */}
+        {eveningStage === "closing" && (() => {
+          const missingDeep = !ownedPacks.includes("deep") || !ownedPacks.includes("vulnerable");
+          return (
+            <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "48px 32px", background: COLORS.cream, textAlign: "center" }}>
+              <div style={{ width: 44, height: 44, borderRadius: "50%", background: COLORS.greenLight, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 32 }}>
+                <span style={{ width: 9, height: 9, borderRadius: "50%", background: COLORS.green, display: "inline-block" }} />
+              </div>
+              <h2 style={{ fontFamily: "Lora, serif", fontSize: 28, fontWeight: 400, color: COLORS.ink, marginBottom: 12, lineHeight: 1.3 }}>That's your evening.</h2>
+              <p style={{ fontFamily: "Lora, serif", fontSize: 16, fontWeight: 400, color: COLORS.inkSoft, fontStyle: "italic", marginBottom: 40 }}>Thanks for making the time.</p>
+              {missingDeep && (
+                <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, fontWeight: 300, color: COLORS.inkMute, lineHeight: 1.6, marginBottom: 32, maxWidth: 290 }}>
+                  When you want to go further, the Deep and Vulnerable packs hold more questions of that kind.{" "}
+                  <button onClick={() => { endEvening(); setTab("packs"); }} style={{ background: "none", border: "none", padding: 0, color: COLORS.green, fontSize: 12, cursor: "pointer", textDecoration: "underline", fontFamily: "Inter, sans-serif" }}>see packs</button>
+                </p>
+              )}
+              <button onClick={endEvening} style={{ width: "100%", padding: "18px", background: COLORS.ink, color: COLORS.cream, border: "none", borderRadius: 16, fontFamily: "Lora, serif", fontSize: 17, cursor: "pointer", boxShadow: "0 4px 20px rgba(28,25,23,0.18)" }}>Done</button>
+            </div>
+          );
+        })()}
+
         {/* VULNERABLE PAUSE */}
         {showVulnerablePause && (
           <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "48px 32px", background: COLORS.cream, textAlign: "center" }}>
@@ -1016,7 +1207,7 @@ export default function WonderApp() {
         )}
 
         {/* MAIN APP */}
-        {!showDraw && !showVulnerablePause && (
+        {!showDraw && !showVulnerablePause && !eveningStage && (
           <div className="screen">
             <div className="header">
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -1059,6 +1250,13 @@ export default function WonderApp() {
               <button onClick={() => { resetSheet(); setShowAddSheet(true); }} style={{ width: "100%", padding: "16px", background: "transparent", color: COLORS.inkSoft, border: `1.5px solid ${COLORS.creamDark}`, borderRadius: 20, fontFamily: "Lora, serif", fontSize: 16, cursor: "pointer", marginBottom: 8 }}>
                 + Add a question
               </button>
+              <button onClick={evening ? resumeEvening : startEvening} style={{ width: "100%", padding: "12px", background: "none", border: "none", cursor: "pointer", textAlign: "center", marginBottom: 6 }}>
+                <span style={{ fontSize: 13, color: COLORS.inkSoft, fontFamily: "Lora, serif" }}>
+                  {evening ? "Resume your evening →" : "Evening Together"}
+                </span>
+                {!evening && <span style={{ display: "block", fontSize: 11, color: COLORS.inkMute, fontWeight: 300, fontFamily: "Inter, sans-serif", marginTop: 2 }}>a dedicated way to spend an evening</span>}
+              </button>
+              {eveningNote && <p style={{ fontSize: 12, color: COLORS.inkMute, fontWeight: 300, textAlign: "center", lineHeight: 1.5, marginBottom: 8 }}>{eveningNote}</p>}
               <button onClick={() => setShowFilter(true)} style={{ width: "100%", padding: "2px", background: "none", border: "none", cursor: "pointer", textAlign: "center" }}>
                 <span style={{ fontSize: 11, color: COLORS.inkMute, fontFamily: "Inter, sans-serif", fontWeight: 300 }}>
                   Drawing from: <span style={{ color: COLORS.inkSoft }}>{activeFilters.length === 4 ? "all questions" : activeFilters.length === 0 ? "nothing selected" : activeFilters.map(f => INTENSITY[f].label).join(", ")}</span>
