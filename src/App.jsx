@@ -1086,7 +1086,7 @@ export default function WonderApp() {
             <p style={{ fontFamily: "Inter, sans-serif", fontSize: 11, fontWeight: 500, letterSpacing: "1.5px", textTransform: "uppercase", color: COLORS.inkMute, marginBottom: 28 }}>Evening Together</p>
             <h2 style={{ fontFamily: "Lora, serif", fontSize: 27, fontWeight: 400, color: COLORS.ink, marginBottom: 20, lineHeight: 1.35 }}>Settle in.</h2>
             <p style={{ fontFamily: "Inter, sans-serif", fontSize: 14, fontWeight: 300, color: COLORS.inkMute, lineHeight: 1.7, marginBottom: 16, maxWidth: 300 }}>
-              A handful of questions, one after another, at your own pace. Some may go somewhere real - that's the point. There's no rush and no need to finish.
+              A handful of questions, one at a time. Take as long as you need with each one. Some may go somewhere real.
             </p>
             {activeFilters.length < 4 && (
               <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, fontWeight: 300, color: COLORS.inkSoft, lineHeight: 1.6, marginBottom: 16, maxWidth: 300, fontStyle: "italic" }}>
@@ -1094,7 +1094,7 @@ export default function WonderApp() {
                 <button onClick={() => { setEveningStage(null); setShowFilter(true); }} style={{ background: "none", border: "none", padding: 0, color: COLORS.green, fontSize: 12, cursor: "pointer", textDecoration: "underline", fontFamily: "Inter, sans-serif" }}>adjust</button>
               </p>
             )}
-            <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, color: COLORS.inkMute, fontWeight: 300, marginBottom: 40 }}>{evening.questions.length} questions · about {Math.round(evening.questions.length * 6)}-{Math.round(evening.questions.length * 9)} minutes</p>
+            <div style={{ marginBottom: 40 }} />
             <button onClick={() => setEveningStage("questions")} style={{ width: "100%", padding: "18px", background: COLORS.ink, color: COLORS.cream, border: "none", borderRadius: 16, fontFamily: "Lora, serif", fontSize: 17, cursor: "pointer", marginBottom: 14, boxShadow: "0 4px 20px rgba(28,25,23,0.18)" }}>Begin</button>
             <button onClick={endEvening} style={{ background: "none", border: "none", fontFamily: "Inter, sans-serif", fontSize: 13, color: COLORS.inkMute, cursor: "pointer", fontWeight: 300 }}>Not now</button>
           </div>
@@ -1247,21 +1247,21 @@ export default function WonderApp() {
               <button className="draw-btn" onClick={drawQuestion} disabled={pool.length === 0 && ownedPacks.length === 0}>
                 {pool.length === 0 && ownedPacks.length === 0 ? "No questions yet" : "Draw a question"}
               </button>
-              <button onClick={() => { resetSheet(); setShowAddSheet(true); }} style={{ width: "100%", padding: "16px", background: "transparent", color: COLORS.inkSoft, border: `1.5px solid ${COLORS.creamDark}`, borderRadius: 20, fontFamily: "Lora, serif", fontSize: 16, cursor: "pointer", marginBottom: 8 }}>
-                + Add a question
-              </button>
-              <button onClick={evening ? resumeEvening : startEvening} style={{ width: "100%", padding: "12px", background: "none", border: "none", cursor: "pointer", textAlign: "center", marginBottom: 6 }}>
-                <span style={{ fontSize: 13, color: COLORS.inkSoft, fontFamily: "Lora, serif" }}>
-                  {evening ? "Resume your evening →" : "Evening Together"}
-                </span>
-                {!evening && <span style={{ display: "block", fontSize: 11, color: COLORS.inkMute, fontWeight: 300, fontFamily: "Inter, sans-serif", marginTop: 2 }}>a dedicated way to spend an evening</span>}
-              </button>
-              {eveningNote && <p style={{ fontSize: 12, color: COLORS.inkMute, fontWeight: 300, textAlign: "center", lineHeight: 1.5, marginBottom: 8 }}>{eveningNote}</p>}
-              <button onClick={() => setShowFilter(true)} style={{ width: "100%", padding: "2px", background: "none", border: "none", cursor: "pointer", textAlign: "center" }}>
+              <button onClick={() => setShowFilter(true)} style={{ width: "100%", padding: "2px", background: "none", border: "none", cursor: "pointer", textAlign: "center", marginBottom: 14 }}>
                 <span style={{ fontSize: 11, color: COLORS.inkMute, fontFamily: "Inter, sans-serif", fontWeight: 300 }}>
                   Drawing from: <span style={{ color: COLORS.inkSoft }}>{activeFilters.length === 4 ? "all questions" : activeFilters.length === 0 ? "nothing selected" : activeFilters.map(f => INTENSITY[f].label).join(", ")}</span>
                 </span>
               </button>
+              <button onClick={() => { resetSheet(); setShowAddSheet(true); }} style={{ width: "100%", padding: "16px", background: "transparent", color: COLORS.inkSoft, border: `1.5px solid ${COLORS.creamDark}`, borderRadius: 20, fontFamily: "Lora, serif", fontSize: 16, cursor: "pointer", marginBottom: 10 }}>
+                + Add a question
+              </button>
+              <button onClick={evening ? resumeEvening : startEvening} style={{ width: "100%", padding: "14px", background: COLORS.creamDark, border: "none", borderRadius: 16, cursor: "pointer", textAlign: "center", marginBottom: 6 }}>
+                <span style={{ display: "block", fontSize: 15, color: COLORS.ink, fontFamily: "Lora, serif" }}>
+                  {evening ? "Resume your evening →" : "Evening Together"}
+                </span>
+                {!evening && <span style={{ display: "block", fontSize: 10, color: COLORS.inkMute, fontWeight: 300, fontFamily: "Inter, sans-serif", marginTop: 3 }}>a dedicated way to spend an evening</span>}
+              </button>
+              {eveningNote && <p style={{ fontSize: 12, color: COLORS.inkMute, fontWeight: 300, textAlign: "center", lineHeight: 1.5, marginBottom: 8, marginTop: 6 }}>{eveningNote}</p>}
             </div>
 
             <div className="scroll-area">
@@ -1377,6 +1377,16 @@ export default function WonderApp() {
                           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                             <span style={{ fontSize: 10, fontWeight: 500, color: INTENSITY[q.intensity]?.color, backgroundColor: INTENSITY[q.intensity]?.bg, padding: "2px 8px", borderRadius: 20 }}>{INTENSITY[q.intensity]?.label}</span>
                             <span style={{ fontSize: 10, color: COLORS.inkMute, fontWeight: 300 }}>{PACK_TEXT_TO_NAME[q.text] ? `from the ${PACK_TEXT_TO_NAME[q.text]} pack` : (q.author === "you" ? "added by you" : `added by ${partnerName || "your person"}`)}</span>
+                            <button onClick={async () => {
+                              if (userSession?.coupleCode) {
+                                await db.from("questions").update({ discussed: false, skipped: false }).eq("id", q.id);
+                                await loadQuestions(userSession.coupleCode);
+                              } else {
+                                setQuestions(prev => prev.map(qq => qq.id === q.id ? { ...qq, discussed: false, skipped: false } : qq));
+                              }
+                            }} style={{ marginLeft: "auto", fontSize: 10, color: COLORS.green, background: "none", border: "none", cursor: "pointer", fontFamily: "Inter, sans-serif", fontWeight: 500 }}>
+                              put back →
+                            </button>
                           </div>
                         </div>
                       ))}
