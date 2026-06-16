@@ -312,7 +312,7 @@ function WelcomeScreen({ onNext }) {
           ))}
         </div>
       </div>
-      <div style={{ padding: "24px 32px 64px", marginTop: "auto" }}>
+      <div style={{ padding: "24px 32px 110px", marginTop: "auto" }}>
         <button onClick={onNext} style={{ width: "100%", padding: "18px", background: COLORS.ink, color: COLORS.cream, border: "none", borderRadius: 16, fontFamily: "Lora, serif", fontSize: 17, fontWeight: 400, cursor: "pointer", boxShadow: "0 4px 20px rgba(28,25,23,0.18)" }}>
           Get started
         </button>
