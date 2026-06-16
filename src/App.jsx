@@ -258,7 +258,7 @@ function clearSession() {
 // ── Onboarding screens ───────────────────────────────────────
 function WelcomeScreen({ onNext }) {
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between", background: COLORS.cream }}>
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: COLORS.cream }}>
       {/* Concept B - the path alone (scaled to a shorter, proportional frame) */}
       <svg width="100%" viewBox="0 0 390 150" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: "block", flexShrink: 0 }}>
         <rect width="390" height="150" fill="#F0EBE3"/>
@@ -300,7 +300,7 @@ function WelcomeScreen({ onNext }) {
         <p style={{ fontFamily: "Inter, sans-serif", fontSize: 13, fontWeight: 300, color: COLORS.inkMute, lineHeight: 1.7, marginBottom: 8 }}>For two people who want to know each other better.</p>
         <p style={{ fontFamily: "Inter, sans-serif", fontSize: 13, fontWeight: 400, color: COLORS.inkSoft, lineHeight: 1.7, fontStyle: "italic" }}>One phone. Present together. Real conversations.</p>
       </div>
-      <div style={{ padding: "24px 32px 44px" }}>
+      <div style={{ padding: "24px 32px 44px", marginTop: "auto" }}>
         <div style={{ marginBottom: 26 }}>
           {[
             { dot: "#3D6B4F", text: "Questions that matter to you, not to anyone else" },
