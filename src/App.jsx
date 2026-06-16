@@ -298,10 +298,8 @@ function WelcomeScreen({ onNext }) {
         <h1 style={{ fontFamily: "Lora, serif", fontSize: 34, fontWeight: 400, color: COLORS.ink, lineHeight: 1.2, marginBottom: 16, letterSpacing: "-0.5px" }}>Wonder</h1>
         <p style={{ fontFamily: "Lora, serif", fontSize: 17, fontWeight: 400, color: COLORS.inkSoft, lineHeight: 1.6, fontStyle: "italic", marginBottom: 12 }}>For the things you've been meaning to ask.</p>
         <p style={{ fontFamily: "Inter, sans-serif", fontSize: 13, fontWeight: 300, color: COLORS.inkMute, lineHeight: 1.7, marginBottom: 8 }}>For two people who want to know each other better.</p>
-        <p style={{ fontFamily: "Inter, sans-serif", fontSize: 13, fontWeight: 400, color: COLORS.inkSoft, lineHeight: 1.7, fontStyle: "italic" }}>One phone. Present together. Real conversations.</p>
-      </div>
-      <div style={{ padding: "24px 32px 44px", marginTop: "auto" }}>
-        <div style={{ marginBottom: 26 }}>
+        <p style={{ fontFamily: "Inter, sans-serif", fontSize: 13, fontWeight: 400, color: COLORS.inkSoft, lineHeight: 1.7, fontStyle: "italic", marginBottom: 28 }}>One phone. Present together. Real conversations.</p>
+        <div>
           {[
             { dot: "#3D6B4F", text: "Questions that matter to you, not to anyone else" },
             { dot: "#B45309", text: "Drawn randomly when you're ready" },
@@ -313,6 +311,8 @@ function WelcomeScreen({ onNext }) {
             </div>
           ))}
         </div>
+      </div>
+      <div style={{ padding: "24px 32px 44px", marginTop: "auto" }}>
         <button onClick={onNext} style={{ width: "100%", padding: "18px", background: COLORS.ink, color: COLORS.cream, border: "none", borderRadius: 16, fontFamily: "Lora, serif", fontSize: 17, fontWeight: 400, cursor: "pointer", boxShadow: "0 4px 20px rgba(28,25,23,0.18)" }}>
           Get started
         </button>
