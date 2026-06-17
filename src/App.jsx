@@ -498,10 +498,13 @@ function ConnectScreen({ name, onConnect, onSkip, onBack }) {
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap');
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body { background: #FAF7F2; font-family: 'Inter', sans-serif; color: #1C1917; min-height: 100vh; max-width: 430px; margin: 0 auto; }
+  html { overflow-x: hidden; }
+  body { background: #FAF7F2; font-family: 'Inter', sans-serif; color: #1C1917; min-height: 100vh; max-width: 430px; margin: 0 auto; overflow-x: hidden; position: relative; }
 
-  .screen { min-height: 100vh; display: flex; flex-direction: column; background: #FAF7F2; }
-  .header { padding: 96px 28px 20px; padding-top: calc(96px + env(safe-area-inset-top, 0px)); background: #FAF7F2; }
+  .screen { min-height: 100vh; display: flex; flex-direction: column; background: transparent; position: relative; z-index: 1; overflow-x: hidden; }
+  .header { padding: 96px 28px 20px; padding-top: calc(96px + env(safe-area-inset-top, 0px)); background: transparent; position: relative; }
+  .paper-texture { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.5; }
+  .horizon-echo { position: absolute; top: 0; left: 0; width: 100%; height: 240px; z-index: 0; pointer-events: none; }
   .logo { font-family: 'Lora', serif; font-size: 26px; font-weight: 400; color: #1C1917; letter-spacing: -0.3px; }
   .tagline { font-size: 12px; color: #78716C; margin-top: 3px; font-weight: 300; letter-spacing: 0.2px; }
   .divider { height: 1px; background: #F0EBE3; margin: 0 28px; }
@@ -1261,6 +1264,19 @@ export default function WonderApp() {
         {/* MAIN APP */}
         {!showDraw && !showVulnerablePause && !eveningStage && (
           <div className="screen">
+            <svg className="paper-texture" xmlns="http://www.w3.org/2000/svg">
+              <filter id="paperNoise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.06 0"/></filter>
+              <rect width="100%" height="100%" filter="url(#paperNoise)"/>
+            </svg>
+            <div className="horizon-echo" style={{ zIndex: 1 }}>
+              <svg width="100%" height="240" viewBox="0 0 390 240" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="300" cy="64" rx="62" ry="26" fill="#FEF3C7" opacity="0.55"/>
+                <ellipse cx="300" cy="64" rx="32" ry="13" fill="#FDE68A" opacity="0.3"/>
+                <path d="M0 160 Q100 130 200 148 Q300 166 390 140 L390 240 L0 240 Z" fill="#E8E2D9" opacity="0.7"/>
+                <path d="M0 180 Q90 165 180 175 Q270 185 390 168 L390 240 L0 240 Z" fill="#DDD6CB" opacity="0.5"/>
+              </svg>
+              <div style={{ position: "absolute", top: 140, left: 0, width: "100%", height: 100, background: "linear-gradient(to bottom, rgba(250,247,242,0), #FAF7F2)" }} />
+            </div>
             <div className="header">
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
