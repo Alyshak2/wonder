@@ -325,7 +325,7 @@ function WelcomeScreen({ onNext }) {
 function NameScreen({ onNext, onBack }) {
   const [name, setName] = useState("");
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between", padding: "72px 32px 56px", background: COLORS.cream }}>
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between", padding: "72px 32px 56px", paddingTop: "calc(96px + env(safe-area-inset-top, 0px))", background: COLORS.cream }}>
       <div>
         <button onClick={onBack} style={{ background: "none", border: "none", fontFamily: "Inter, sans-serif", fontSize: 13, color: COLORS.inkMute, cursor: "pointer", padding: 0, marginBottom: 32, display: "flex", alignItems: "center", gap: 6 }}>← back</button>
         <div style={{ width: 40, height: 40, borderRadius: "22.4%", background: COLORS.white, border: `1.5px solid ${COLORS.creamDark}`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 28 }}>
@@ -426,7 +426,7 @@ function ConnectScreen({ name, onConnect, onSkip, onBack }) {
   }
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between", padding: "72px 32px 56px", background: COLORS.cream }}>
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between", padding: "72px 32px 56px", paddingTop: "calc(96px + env(safe-area-inset-top, 0px))", background: COLORS.cream }}>
       <div>
         <button onClick={onBack} style={{ background: "none", border: "none", fontFamily: "Inter, sans-serif", fontSize: 13, color: COLORS.inkMute, cursor: "pointer", padding: 0, marginBottom: 32, display: "flex", alignItems: "center", gap: 6 }}>← back</button>
         <div style={{ width: 40, height: 40, borderRadius: "22.4%", background: COLORS.white, border: `1.5px solid ${COLORS.creamDark}`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 28 }}>
@@ -501,7 +501,7 @@ const styles = `
   body { background: #FAF7F2; font-family: 'Inter', sans-serif; color: #1C1917; min-height: 100vh; max-width: 430px; margin: 0 auto; }
 
   .screen { min-height: 100vh; display: flex; flex-direction: column; background: #FAF7F2; }
-  .header { padding: 72px 28px 20px; padding-top: calc(72px + env(safe-area-inset-top, 0px)); background: #FAF7F2; }
+  .header { padding: 96px 28px 20px; padding-top: calc(96px + env(safe-area-inset-top, 0px)); background: #FAF7F2; }
   .logo { font-family: 'Lora', serif; font-size: 26px; font-weight: 400; color: #1C1917; letter-spacing: -0.3px; }
   .tagline { font-size: 12px; color: #78716C; margin-top: 3px; font-weight: 300; letter-spacing: 0.2px; }
   .divider { height: 1px; background: #F0EBE3; margin: 0 28px; }
