@@ -501,7 +501,7 @@ const styles = `
   body { background: #FAF7F2; font-family: 'Inter', sans-serif; color: #1C1917; min-height: 100vh; max-width: 430px; margin: 0 auto; }
 
   .screen { min-height: 100vh; display: flex; flex-direction: column; background: #FAF7F2; }
-  .header { padding: 56px 28px 20px; background: #FAF7F2; }
+  .header { padding: calc(env(safe-area-inset-top, 20px) + 24px) 28px 20px; background: #FAF7F2; }
   .logo { font-family: 'Lora', serif; font-size: 26px; font-weight: 400; color: #1C1917; letter-spacing: -0.3px; }
   .tagline { font-size: 12px; color: #78716C; margin-top: 3px; font-weight: 300; letter-spacing: 0.2px; }
   .divider { height: 1px; background: #F0EBE3; margin: 0 28px; }
