@@ -1307,12 +1307,12 @@ export default function WonderApp() {
               <button onClick={() => { resetSheet(); setShowAddSheet(true); }} style={{ width: "100%", padding: "16px", background: COLORS.white, color: COLORS.ink, border: `1.5px solid ${COLORS.creamDark}`, borderRadius: 20, fontFamily: "Lora, serif", fontSize: 16, cursor: "pointer", marginBottom: 14, boxShadow: "0 3px 14px rgba(28,25,23,0.08)" }}>
                 + Add a question
               </button>
-              <div style={{ textAlign: "center" }}>
+              <div style={{ textAlign: "center", marginTop: 20 }}>
                 <button onClick={evening ? resumeEvening : startEvening} style={{ display: "inline-block", maxWidth: "78%", padding: "9px 16px", background: COLORS.creamDark, border: "none", borderRadius: 14, cursor: "pointer", textAlign: "center" }}>
                   <span style={{ display: "block", fontSize: 13, color: COLORS.inkSoft, fontFamily: "Lora, serif" }}>
                     {evening ? "Resume your evening →" : "Evening Together ›"}
                   </span>
-                  {!evening && <span style={{ display: "block", fontSize: 9, color: COLORS.inkMute, fontWeight: 300, fontFamily: "Inter, sans-serif", marginTop: 3 }}>a dedicated way to spend an evening</span>}
+                  {!evening && <span style={{ display: "block", fontSize: 9, color: COLORS.inkMute, fontWeight: 300, fontFamily: "Inter, sans-serif", marginTop: 3 }}>let the conversation unfold</span>}
                 </button>
               </div>
               {eveningNote && <p style={{ fontSize: 12, color: COLORS.inkMute, fontWeight: 300, textAlign: "center", lineHeight: 1.5, marginBottom: 8, marginTop: 6 }}>{eveningNote}</p>}
